@@ -1,9 +1,6 @@
 #pragma once
 #include "image_ppm.h"
-
-struct Color{
-    unsigned char r, g, b;
-};
+#include "Color.h"
 
 class ColorImage{
     OCTET* image;
