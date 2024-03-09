@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <cmath>
 
-std::array<double, 3> Color::GetHSL(){
+std::array<double, 3> Color::GetHSL() const{
     double r = this->r / 255.0;
     double g = this->g / 255.0;
     double b = this->b / 255.0;
