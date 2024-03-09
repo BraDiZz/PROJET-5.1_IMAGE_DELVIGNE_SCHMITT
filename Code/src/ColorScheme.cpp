@@ -3,7 +3,7 @@
 
 ColorScheme::ColorScheme(std::vector<double> hues) : hues(hues) {}
 
-Color ColorScheme::GetClostesColorInScheme(const Color& color){
+Color ColorScheme::GetClostesColorInScheme(const Color& color) const{
     auto originalHSLColor = color.GetHSL();
     double closestHue = GetClosestHue(originalHSLColor[0]);
 
@@ -12,7 +12,7 @@ Color ColorScheme::GetClostesColorInScheme(const Color& color){
     return closestColor;
 }
 
-double ColorScheme::GetClosestHue(double hue){
+double ColorScheme::GetClosestHue(double hue) const{
     double minDistance = 360;
     double closestHue;
     for(double h : this->hues){

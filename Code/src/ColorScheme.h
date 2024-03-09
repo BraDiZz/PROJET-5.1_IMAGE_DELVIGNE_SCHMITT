@@ -7,8 +7,8 @@ class ColorScheme{
 
 public:
     ColorScheme(std::vector<double> hues);
-    Color GetClostesColorInScheme(const Color& color);
+    Color GetClostesColorInScheme(const Color& color) const;
 
 private:
-    double GetClosestHue(double hue);
+    double GetClosestHue(double hue) const;
 };

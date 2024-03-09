@@ -5,7 +5,7 @@ ColorImage::ColorImage(char *filename){
     lire_nb_lignes_colonnes_image_ppm(filename, &width, &height);
     int size = width * height * 3;
     allocation_tableau(image, OCTET, size);
-    lire_image_ppm(filename, image, size);
+    lire_image_ppm(filename, image, width * height);
 }
 
 ColorImage::ColorImage(int width, int height) : width(width), height(height){

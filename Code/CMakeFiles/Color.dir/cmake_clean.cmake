@@ -1,4 +1,12 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/Color.dir/src/Color.cpp.o"
+  "CMakeFiles/Color.dir/src/Color.cpp.o.d"
+  "CMakeFiles/Color.dir/src/ColorImage.cpp.o"
+  "CMakeFiles/Color.dir/src/ColorImage.cpp.o.d"
+  "CMakeFiles/Color.dir/src/ColorScheme.cpp.o"
+  "CMakeFiles/Color.dir/src/ColorScheme.cpp.o.d"
+  "CMakeFiles/Color.dir/src/ColorSchemeConverter.cpp.o"
+  "CMakeFiles/Color.dir/src/ColorSchemeConverter.cpp.o.d"
   "CMakeFiles/Color.dir/src/Image_ppm.cpp.o"
   "CMakeFiles/Color.dir/src/Image_ppm.cpp.o.d"
   "CMakeFiles/Color.dir/src/Test.cpp.o"

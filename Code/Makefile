@@ -129,6 +129,102 @@ Color/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Color.dir/build.make CMakeFiles/Color.dir/build
 .PHONY : Color/fast
 
+src/Color.o: src/Color.cpp.o
+.PHONY : src/Color.o
+
+# target to build an object file
+src/Color.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Color.dir/build.make CMakeFiles/Color.dir/src/Color.cpp.o
+.PHONY : src/Color.cpp.o
+
+src/Color.i: src/Color.cpp.i
+.PHONY : src/Color.i
+
+# target to preprocess a source file
+src/Color.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Color.dir/build.make CMakeFiles/Color.dir/src/Color.cpp.i
+.PHONY : src/Color.cpp.i
+
+src/Color.s: src/Color.cpp.s
+.PHONY : src/Color.s
+
+# target to generate assembly for a file
+src/Color.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Color.dir/build.make CMakeFiles/Color.dir/src/Color.cpp.s
+.PHONY : src/Color.cpp.s
+
+src/ColorImage.o: src/ColorImage.cpp.o
+.PHONY : src/ColorImage.o
+
+# target to build an object file
+src/ColorImage.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Color.dir/build.make CMakeFiles/Color.dir/src/ColorImage.cpp.o
+.PHONY : src/ColorImage.cpp.o
+
+src/ColorImage.i: src/ColorImage.cpp.i
+.PHONY : src/ColorImage.i
+
+# target to preprocess a source file
+src/ColorImage.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Color.dir/build.make CMakeFiles/Color.dir/src/ColorImage.cpp.i
+.PHONY : src/ColorImage.cpp.i
+
+src/ColorImage.s: src/ColorImage.cpp.s
+.PHONY : src/ColorImage.s
+
+# target to generate assembly for a file
+src/ColorImage.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Color.dir/build.make CMakeFiles/Color.dir/src/ColorImage.cpp.s
+.PHONY : src/ColorImage.cpp.s
+
+src/ColorScheme.o: src/ColorScheme.cpp.o
+.PHONY : src/ColorScheme.o
+
+# target to build an object file
+src/ColorScheme.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Color.dir/build.make CMakeFiles/Color.dir/src/ColorScheme.cpp.o
+.PHONY : src/ColorScheme.cpp.o
+
+src/ColorScheme.i: src/ColorScheme.cpp.i
+.PHONY : src/ColorScheme.i
+
+# target to preprocess a source file
+src/ColorScheme.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Color.dir/build.make CMakeFiles/Color.dir/src/ColorScheme.cpp.i
+.PHONY : src/ColorScheme.cpp.i
+
+src/ColorScheme.s: src/ColorScheme.cpp.s
+.PHONY : src/ColorScheme.s
+
+# target to generate assembly for a file
+src/ColorScheme.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Color.dir/build.make CMakeFiles/Color.dir/src/ColorScheme.cpp.s
+.PHONY : src/ColorScheme.cpp.s
+
+src/ColorSchemeConverter.o: src/ColorSchemeConverter.cpp.o
+.PHONY : src/ColorSchemeConverter.o
+
+# target to build an object file
+src/ColorSchemeConverter.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Color.dir/build.make CMakeFiles/Color.dir/src/ColorSchemeConverter.cpp.o
+.PHONY : src/ColorSchemeConverter.cpp.o
+
+src/ColorSchemeConverter.i: src/ColorSchemeConverter.cpp.i
+.PHONY : src/ColorSchemeConverter.i
+
+# target to preprocess a source file
+src/ColorSchemeConverter.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Color.dir/build.make CMakeFiles/Color.dir/src/ColorSchemeConverter.cpp.i
+.PHONY : src/ColorSchemeConverter.cpp.i
+
+src/ColorSchemeConverter.s: src/ColorSchemeConverter.cpp.s
+.PHONY : src/ColorSchemeConverter.s
+
+# target to generate assembly for a file
+src/ColorSchemeConverter.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Color.dir/build.make CMakeFiles/Color.dir/src/ColorSchemeConverter.cpp.s
+.PHONY : src/ColorSchemeConverter.cpp.s
+
 src/Image_ppm.o: src/Image_ppm.cpp.o
 .PHONY : src/Image_ppm.o
 
@@ -210,6 +306,18 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... Color"
+	@echo "... src/Color.o"
+	@echo "... src/Color.i"
+	@echo "... src/Color.s"
+	@echo "... src/ColorImage.o"
+	@echo "... src/ColorImage.i"
+	@echo "... src/ColorImage.s"
+	@echo "... src/ColorScheme.o"
+	@echo "... src/ColorScheme.i"
+	@echo "... src/ColorScheme.s"
+	@echo "... src/ColorSchemeConverter.o"
+	@echo "... src/ColorSchemeConverter.i"
+	@echo "... src/ColorSchemeConverter.s"
 	@echo "... src/Image_ppm.o"
 	@echo "... src/Image_ppm.i"
 	@echo "... src/Image_ppm.s"

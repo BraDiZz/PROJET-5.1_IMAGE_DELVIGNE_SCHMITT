@@ -81,12 +81,12 @@ clean: CMakeFiles/Color.dir/clean
 CMakeFiles/Color.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Color.dir/build.make CMakeFiles/Color.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Color.dir/build.make CMakeFiles/Color.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/vincent/Dokumente/Uni/Compression/Project/PROJET-5.1_IMAGE_DELVIGNE_SCHMITT/Code/CMakeFiles --progress-num=1,2,3,4 "Built target Color"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/vincent/Dokumente/Uni/Compression/Project/PROJET-5.1_IMAGE_DELVIGNE_SCHMITT/Code/CMakeFiles --progress-num=1,2,3,4,5,6,7,8 "Built target Color"
 .PHONY : CMakeFiles/Color.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/Color.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/vincent/Dokumente/Uni/Compression/Project/PROJET-5.1_IMAGE_DELVIGNE_SCHMITT/Code/CMakeFiles 4
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/vincent/Dokumente/Uni/Compression/Project/PROJET-5.1_IMAGE_DELVIGNE_SCHMITT/Code/CMakeFiles 8
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/Color.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/vincent/Dokumente/Uni/Compression/Project/PROJET-5.1_IMAGE_DELVIGNE_SCHMITT/Code/CMakeFiles 0
 .PHONY : CMakeFiles/Color.dir/rule
