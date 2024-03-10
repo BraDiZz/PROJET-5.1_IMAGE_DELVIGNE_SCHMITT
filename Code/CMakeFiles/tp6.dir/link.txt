@@ -1,0 +1,1 @@
+/usr/bin/c++  -Wall CMakeFiles/tp6.dir/src/Image_ppm.cpp.o CMakeFiles/tp6.dir/src/Test.cpp.o CMakeFiles/tp6.dir/src/main.cpp.o -o tp6 

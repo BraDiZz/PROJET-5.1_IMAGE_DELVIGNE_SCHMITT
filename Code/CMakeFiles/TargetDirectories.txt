@@ -1,0 +1,3 @@
+/home/vincent/Dokumente/Uni/Compression/Project/PROJET-5.1_IMAGE_DELVIGNE_SCHMITT/Code/CMakeFiles/Color.dir
+/home/vincent/Dokumente/Uni/Compression/Project/PROJET-5.1_IMAGE_DELVIGNE_SCHMITT/Code/CMakeFiles/edit_cache.dir
+/home/vincent/Dokumente/Uni/Compression/Project/PROJET-5.1_IMAGE_DELVIGNE_SCHMITT/Code/CMakeFiles/rebuild_cache.dir
