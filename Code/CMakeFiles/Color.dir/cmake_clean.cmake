@@ -7,6 +7,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/Color.dir/src/ColorScheme.cpp.o.d"
   "CMakeFiles/Color.dir/src/ColorSchemeConverter.cpp.o"
   "CMakeFiles/Color.dir/src/ColorSchemeConverter.cpp.o.d"
+  "CMakeFiles/Color.dir/src/HueSmother.cpp.o"
+  "CMakeFiles/Color.dir/src/HueSmother.cpp.o.d"
   "CMakeFiles/Color.dir/src/Image_ppm.cpp.o"
   "CMakeFiles/Color.dir/src/Image_ppm.cpp.o.d"
   "CMakeFiles/Color.dir/src/Test.cpp.o"

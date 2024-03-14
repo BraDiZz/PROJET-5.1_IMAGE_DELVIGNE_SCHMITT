@@ -65,3 +65,9 @@ void Color::SetHSL(double hue, double saturation, double lightness){
     this->g = (g + m) * 255;
     this->b = (b + m) * 255;
 }
+
+Color Color::FromHSL(double hue, double saturation, double lightness){
+    Color color;
+    color.SetHSL(hue, saturation, lightness);
+    return color;
+}

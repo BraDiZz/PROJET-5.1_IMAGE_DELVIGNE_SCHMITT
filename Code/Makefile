@@ -225,6 +225,30 @@ src/ColorSchemeConverter.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Color.dir/build.make CMakeFiles/Color.dir/src/ColorSchemeConverter.cpp.s
 .PHONY : src/ColorSchemeConverter.cpp.s
 
+src/HueSmother.o: src/HueSmother.cpp.o
+.PHONY : src/HueSmother.o
+
+# target to build an object file
+src/HueSmother.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Color.dir/build.make CMakeFiles/Color.dir/src/HueSmother.cpp.o
+.PHONY : src/HueSmother.cpp.o
+
+src/HueSmother.i: src/HueSmother.cpp.i
+.PHONY : src/HueSmother.i
+
+# target to preprocess a source file
+src/HueSmother.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Color.dir/build.make CMakeFiles/Color.dir/src/HueSmother.cpp.i
+.PHONY : src/HueSmother.cpp.i
+
+src/HueSmother.s: src/HueSmother.cpp.s
+.PHONY : src/HueSmother.s
+
+# target to generate assembly for a file
+src/HueSmother.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Color.dir/build.make CMakeFiles/Color.dir/src/HueSmother.cpp.s
+.PHONY : src/HueSmother.cpp.s
+
 src/Image_ppm.o: src/Image_ppm.cpp.o
 .PHONY : src/Image_ppm.o
 
@@ -318,6 +342,9 @@ help:
 	@echo "... src/ColorSchemeConverter.o"
 	@echo "... src/ColorSchemeConverter.i"
 	@echo "... src/ColorSchemeConverter.s"
+	@echo "... src/HueSmother.o"
+	@echo "... src/HueSmother.i"
+	@echo "... src/HueSmother.s"
 	@echo "... src/Image_ppm.o"
 	@echo "... src/Image_ppm.i"
 	@echo "... src/Image_ppm.s"

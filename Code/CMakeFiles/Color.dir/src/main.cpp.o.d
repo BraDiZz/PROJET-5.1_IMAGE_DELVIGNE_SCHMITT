@@ -106,4 +106,5 @@ CMakeFiles/Color.dir/src/main.cpp.o: \
  /usr/include/c++/12/bits/stl_function.h \
  /usr/include/c++/12/backward/binders.h \
  /usr/include/c++/12/bits/vector.tcc \
- /home/vincent/Dokumente/Uni/Compression/Project/PROJET-5.1_IMAGE_DELVIGNE_SCHMITT/Code/src/ColorSchemeConverter.h
+ /home/vincent/Dokumente/Uni/Compression/Project/PROJET-5.1_IMAGE_DELVIGNE_SCHMITT/Code/src/ColorSchemeConverter.h \
+ /home/vincent/Dokumente/Uni/Compression/Project/PROJET-5.1_IMAGE_DELVIGNE_SCHMITT/Code/src/HueSmother.h

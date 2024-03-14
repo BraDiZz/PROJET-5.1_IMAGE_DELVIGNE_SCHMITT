@@ -125,10 +125,24 @@ CMakeFiles/Color.dir/src/ColorSchemeConverter.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Color.dir/src/ColorSchemeConverter.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/vincent/Dokumente/Uni/Compression/Project/PROJET-5.1_IMAGE_DELVIGNE_SCHMITT/Code/src/ColorSchemeConverter.cpp -o CMakeFiles/Color.dir/src/ColorSchemeConverter.cpp.s
 
+CMakeFiles/Color.dir/src/HueSmother.cpp.o: CMakeFiles/Color.dir/flags.make
+CMakeFiles/Color.dir/src/HueSmother.cpp.o: src/HueSmother.cpp
+CMakeFiles/Color.dir/src/HueSmother.cpp.o: CMakeFiles/Color.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/vincent/Dokumente/Uni/Compression/Project/PROJET-5.1_IMAGE_DELVIGNE_SCHMITT/Code/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/Color.dir/src/HueSmother.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Color.dir/src/HueSmother.cpp.o -MF CMakeFiles/Color.dir/src/HueSmother.cpp.o.d -o CMakeFiles/Color.dir/src/HueSmother.cpp.o -c /home/vincent/Dokumente/Uni/Compression/Project/PROJET-5.1_IMAGE_DELVIGNE_SCHMITT/Code/src/HueSmother.cpp
+
+CMakeFiles/Color.dir/src/HueSmother.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Color.dir/src/HueSmother.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/vincent/Dokumente/Uni/Compression/Project/PROJET-5.1_IMAGE_DELVIGNE_SCHMITT/Code/src/HueSmother.cpp > CMakeFiles/Color.dir/src/HueSmother.cpp.i
+
+CMakeFiles/Color.dir/src/HueSmother.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Color.dir/src/HueSmother.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/vincent/Dokumente/Uni/Compression/Project/PROJET-5.1_IMAGE_DELVIGNE_SCHMITT/Code/src/HueSmother.cpp -o CMakeFiles/Color.dir/src/HueSmother.cpp.s
+
 CMakeFiles/Color.dir/src/Image_ppm.cpp.o: CMakeFiles/Color.dir/flags.make
 CMakeFiles/Color.dir/src/Image_ppm.cpp.o: src/Image_ppm.cpp
 CMakeFiles/Color.dir/src/Image_ppm.cpp.o: CMakeFiles/Color.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/vincent/Dokumente/Uni/Compression/Project/PROJET-5.1_IMAGE_DELVIGNE_SCHMITT/Code/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/Color.dir/src/Image_ppm.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/vincent/Dokumente/Uni/Compression/Project/PROJET-5.1_IMAGE_DELVIGNE_SCHMITT/Code/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/Color.dir/src/Image_ppm.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Color.dir/src/Image_ppm.cpp.o -MF CMakeFiles/Color.dir/src/Image_ppm.cpp.o.d -o CMakeFiles/Color.dir/src/Image_ppm.cpp.o -c /home/vincent/Dokumente/Uni/Compression/Project/PROJET-5.1_IMAGE_DELVIGNE_SCHMITT/Code/src/Image_ppm.cpp
 
 CMakeFiles/Color.dir/src/Image_ppm.cpp.i: cmake_force
@@ -142,7 +156,7 @@ CMakeFiles/Color.dir/src/Image_ppm.cpp.s: cmake_force
 CMakeFiles/Color.dir/src/Test.cpp.o: CMakeFiles/Color.dir/flags.make
 CMakeFiles/Color.dir/src/Test.cpp.o: src/Test.cpp
 CMakeFiles/Color.dir/src/Test.cpp.o: CMakeFiles/Color.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/vincent/Dokumente/Uni/Compression/Project/PROJET-5.1_IMAGE_DELVIGNE_SCHMITT/Code/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/Color.dir/src/Test.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/vincent/Dokumente/Uni/Compression/Project/PROJET-5.1_IMAGE_DELVIGNE_SCHMITT/Code/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/Color.dir/src/Test.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Color.dir/src/Test.cpp.o -MF CMakeFiles/Color.dir/src/Test.cpp.o.d -o CMakeFiles/Color.dir/src/Test.cpp.o -c /home/vincent/Dokumente/Uni/Compression/Project/PROJET-5.1_IMAGE_DELVIGNE_SCHMITT/Code/src/Test.cpp
 
 CMakeFiles/Color.dir/src/Test.cpp.i: cmake_force
@@ -156,7 +170,7 @@ CMakeFiles/Color.dir/src/Test.cpp.s: cmake_force
 CMakeFiles/Color.dir/src/main.cpp.o: CMakeFiles/Color.dir/flags.make
 CMakeFiles/Color.dir/src/main.cpp.o: src/main.cpp
 CMakeFiles/Color.dir/src/main.cpp.o: CMakeFiles/Color.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/vincent/Dokumente/Uni/Compression/Project/PROJET-5.1_IMAGE_DELVIGNE_SCHMITT/Code/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/Color.dir/src/main.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/vincent/Dokumente/Uni/Compression/Project/PROJET-5.1_IMAGE_DELVIGNE_SCHMITT/Code/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/Color.dir/src/main.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Color.dir/src/main.cpp.o -MF CMakeFiles/Color.dir/src/main.cpp.o.d -o CMakeFiles/Color.dir/src/main.cpp.o -c /home/vincent/Dokumente/Uni/Compression/Project/PROJET-5.1_IMAGE_DELVIGNE_SCHMITT/Code/src/main.cpp
 
 CMakeFiles/Color.dir/src/main.cpp.i: cmake_force
@@ -173,6 +187,7 @@ Color_OBJECTS = \
 "CMakeFiles/Color.dir/src/ColorImage.cpp.o" \
 "CMakeFiles/Color.dir/src/ColorScheme.cpp.o" \
 "CMakeFiles/Color.dir/src/ColorSchemeConverter.cpp.o" \
+"CMakeFiles/Color.dir/src/HueSmother.cpp.o" \
 "CMakeFiles/Color.dir/src/Image_ppm.cpp.o" \
 "CMakeFiles/Color.dir/src/Test.cpp.o" \
 "CMakeFiles/Color.dir/src/main.cpp.o"
@@ -184,12 +199,13 @@ Color: CMakeFiles/Color.dir/src/Color.cpp.o
 Color: CMakeFiles/Color.dir/src/ColorImage.cpp.o
 Color: CMakeFiles/Color.dir/src/ColorScheme.cpp.o
 Color: CMakeFiles/Color.dir/src/ColorSchemeConverter.cpp.o
+Color: CMakeFiles/Color.dir/src/HueSmother.cpp.o
 Color: CMakeFiles/Color.dir/src/Image_ppm.cpp.o
 Color: CMakeFiles/Color.dir/src/Test.cpp.o
 Color: CMakeFiles/Color.dir/src/main.cpp.o
 Color: CMakeFiles/Color.dir/build.make
 Color: CMakeFiles/Color.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/vincent/Dokumente/Uni/Compression/Project/PROJET-5.1_IMAGE_DELVIGNE_SCHMITT/Code/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Linking CXX executable Color"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/vincent/Dokumente/Uni/Compression/Project/PROJET-5.1_IMAGE_DELVIGNE_SCHMITT/Code/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Linking CXX executable Color"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/Color.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

@@ -1,2 +1,3 @@
 City.ppm: https://news.melbourne.vic.gov.au/wp-content/uploads/2023/05/DJI_0192-HDR_edit-landscape-1000.jpg
 Leaf.ppm: https://tf-cmsv2-smithsonianmag-media.s3.amazonaws.com/legacy_blog/opposite.jpg
+color_festival.ppm: https://news.unl.edu/sites/default/files/media/color_festival.jpg

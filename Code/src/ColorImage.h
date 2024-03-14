@@ -13,10 +13,16 @@ public:
 
     void Write(char* filename);
     void SetPixel(int x, int y, Color color);
-    Color GetPixel(int x, int y);
-    bool IsInside(int x, int y);
+    Color GetPixel(int x, int y) const;
+    bool IsInside(int x, int y) const;
+
+    void Set(const ColorImage& other);
 
     int GetWidth();
     int GetHeight();
+
+private:
+    int GetIndexInArray(int x, int y) const;
+
 };
 

@@ -1,6 +1,7 @@
 #include "ColorImage.h"
 #include "ColorScheme.h"
 #include "ColorSchemeConverter.h"
+#include "HueSmother.h"
 
 int main(int argc, char* argv[]){
     char inputFileName[250], outputFileName[250];
@@ -17,8 +18,9 @@ int main(int argc, char* argv[]){
     sscanf (argv[4],"%lf",&hue2);
 
     ColorImage img(inputFileName);
-    TriadicColorScheme scheme(hue1);
+    AnalogousColorScheme scheme(hue1, hue2, 5);
 
     ColorSchemeConverter::ConvertToColorScheme(img, scheme);
+    HueSmother::SmoothHue(img, 10);
     img.Write(outputFileName);
 }
