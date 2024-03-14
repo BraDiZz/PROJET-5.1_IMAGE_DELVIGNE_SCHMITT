@@ -16,7 +16,7 @@ Color ColorScheme::GetClostesColorInScheme(const Color& color) const{
     double closestHue = GetClosestHue(originalHSLColor[0]);
 
     Color closestColor;
-    closestColor.SetHSV(closestHue, originalHSLColor[1], originalHSLColor[2]);
+    closestColor.SetHSL(closestHue, originalHSLColor[1], originalHSLColor[2]);
     return closestColor;
 }
 

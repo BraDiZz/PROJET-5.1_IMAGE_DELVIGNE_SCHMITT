@@ -17,7 +17,7 @@ int main(int argc, char* argv[]){
     sscanf (argv[4],"%lf",&hue2);
 
     ColorImage img(inputFileName);
-    ColorScheme scheme({hue1, hue2});
+    TriadicColorScheme scheme(hue1);
 
     ColorSchemeConverter::ConvertToColorScheme(img, scheme);
     img.Write(outputFileName);

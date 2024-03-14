@@ -29,10 +29,10 @@ std::array<double, 3> Color::GetHSL() const{
     return {hue, saturation, lightness};
 }
 
-void Color::SetHSV(double hue, double saturation, double value){
-    double c = value * saturation;
+void Color::SetHSL(double hue, double saturation, double lightness){
+    double c = (1 - std::abs(2 * lightness - 1)) * saturation;
     double x = c * (1 - std::abs(fmod(hue / 60, 2) - 1));
-    double m = value - c;
+    double m = lightness - c / 2;
 
     double r, g, b;
     if(hue < 60){
