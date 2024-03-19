@@ -1,4 +1,4 @@
-# Install script for directory: /home/vincent/Dokumente/Uni/Compression/Project/PROJET-5.1_IMAGE_DELVIGNE_SCHMITT/Code
+# Install script for directory: /home/e20230010831/Bureau/PROJET-5.1_IMAGE_DELVIGNE_SCHMITT/Code
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -50,5 +50,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/vincent/Dokumente/Uni/Compression/Project/PROJET-5.1_IMAGE_DELVIGNE_SCHMITT/Code/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/e20230010831/Bureau/PROJET-5.1_IMAGE_DELVIGNE_SCHMITT/Code/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
