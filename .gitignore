@@ -7,3 +7,7 @@
 # Ignore CMakeFiles folder
 Code/CMakeFiles/
 
+
+Code/Makefile
+
+Code/Color
