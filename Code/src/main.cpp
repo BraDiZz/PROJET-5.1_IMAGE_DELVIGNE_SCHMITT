@@ -21,6 +21,6 @@ int main(int argc, char* argv[]){
     AnalogousColorScheme scheme(hue1, hue2, 5);
 
     ColorSchemeConverter::ConvertToColorScheme(img, scheme);
-    HueSmother::SmoothHue(img, 10);
+    //HueSmother::SmoothHue(img, 10);
     img.Write(outputFileName);
 }
