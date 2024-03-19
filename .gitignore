@@ -5,5 +5,5 @@
 !CMakeLists.txt
 
 # Ignore CMakeFiles folder
-CMakeFiles/
+Code/CMakeFiles/
 
