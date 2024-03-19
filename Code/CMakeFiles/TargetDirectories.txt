@@ -1,3 +1,0 @@
-/home/e20230010831/Bureau/PROJET-5.1_IMAGE_DELVIGNE_SCHMITT/Code/CMakeFiles/Color.dir
-/home/e20230010831/Bureau/PROJET-5.1_IMAGE_DELVIGNE_SCHMITT/Code/CMakeFiles/edit_cache.dir
-/home/e20230010831/Bureau/PROJET-5.1_IMAGE_DELVIGNE_SCHMITT/Code/CMakeFiles/rebuild_cache.dir
