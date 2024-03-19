@@ -1,0 +1,9 @@
+# Ignore all CMake files
+*.cmake
+
+# Exclude CMakeLists.txt
+!CMakeLists.txt
+
+# Ignore CMakeFiles folder
+CMakeFiles/
+
