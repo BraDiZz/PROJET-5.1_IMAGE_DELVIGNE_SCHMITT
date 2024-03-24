@@ -1,7 +1,7 @@
 #include "ColorImage.h"
 #include "ColorScheme.h"
-#include "ColorSchemeConverter.h"
 #include "HueSmother.h"
+#include "ColorMapper.h"
 
 int main(int argc, char* argv[]){
     char inputFileName[250], outputFileName[250];
@@ -18,9 +18,9 @@ int main(int argc, char* argv[]){
     sscanf (argv[4],"%lf",&hue2);
 
     ColorImage img(inputFileName);
-    AnalogousColorScheme scheme(hue1, hue2, 5);
+    ClosestMapper mapper(new TriadicColorScheme(hue1));
 
-    ColorSchemeConverter::ConvertToColorScheme(img, scheme);
-    //HueSmother::SmoothHue(img, 10);
+    mapper.ConvertToColorScheme(img);
+    //HueSmother::SmoothHue(img, 3);
     img.Write(outputFileName);
 }

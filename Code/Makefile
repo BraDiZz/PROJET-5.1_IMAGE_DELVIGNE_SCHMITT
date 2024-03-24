@@ -177,6 +177,30 @@ src/ColorImage.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Color.dir/build.make CMakeFiles/Color.dir/src/ColorImage.cpp.s
 .PHONY : src/ColorImage.cpp.s
 
+src/ColorMapper.o: src/ColorMapper.cpp.o
+.PHONY : src/ColorMapper.o
+
+# target to build an object file
+src/ColorMapper.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Color.dir/build.make CMakeFiles/Color.dir/src/ColorMapper.cpp.o
+.PHONY : src/ColorMapper.cpp.o
+
+src/ColorMapper.i: src/ColorMapper.cpp.i
+.PHONY : src/ColorMapper.i
+
+# target to preprocess a source file
+src/ColorMapper.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Color.dir/build.make CMakeFiles/Color.dir/src/ColorMapper.cpp.i
+.PHONY : src/ColorMapper.cpp.i
+
+src/ColorMapper.s: src/ColorMapper.cpp.s
+.PHONY : src/ColorMapper.s
+
+# target to generate assembly for a file
+src/ColorMapper.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Color.dir/build.make CMakeFiles/Color.dir/src/ColorMapper.cpp.s
+.PHONY : src/ColorMapper.cpp.s
+
 src/ColorScheme.o: src/ColorScheme.cpp.o
 .PHONY : src/ColorScheme.o
 
@@ -200,30 +224,6 @@ src/ColorScheme.s: src/ColorScheme.cpp.s
 src/ColorScheme.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Color.dir/build.make CMakeFiles/Color.dir/src/ColorScheme.cpp.s
 .PHONY : src/ColorScheme.cpp.s
-
-src/ColorSchemeConverter.o: src/ColorSchemeConverter.cpp.o
-.PHONY : src/ColorSchemeConverter.o
-
-# target to build an object file
-src/ColorSchemeConverter.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Color.dir/build.make CMakeFiles/Color.dir/src/ColorSchemeConverter.cpp.o
-.PHONY : src/ColorSchemeConverter.cpp.o
-
-src/ColorSchemeConverter.i: src/ColorSchemeConverter.cpp.i
-.PHONY : src/ColorSchemeConverter.i
-
-# target to preprocess a source file
-src/ColorSchemeConverter.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Color.dir/build.make CMakeFiles/Color.dir/src/ColorSchemeConverter.cpp.i
-.PHONY : src/ColorSchemeConverter.cpp.i
-
-src/ColorSchemeConverter.s: src/ColorSchemeConverter.cpp.s
-.PHONY : src/ColorSchemeConverter.s
-
-# target to generate assembly for a file
-src/ColorSchemeConverter.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Color.dir/build.make CMakeFiles/Color.dir/src/ColorSchemeConverter.cpp.s
-.PHONY : src/ColorSchemeConverter.cpp.s
 
 src/HueSmother.o: src/HueSmother.cpp.o
 .PHONY : src/HueSmother.o
@@ -336,12 +336,12 @@ help:
 	@echo "... src/ColorImage.o"
 	@echo "... src/ColorImage.i"
 	@echo "... src/ColorImage.s"
+	@echo "... src/ColorMapper.o"
+	@echo "... src/ColorMapper.i"
+	@echo "... src/ColorMapper.s"
 	@echo "... src/ColorScheme.o"
 	@echo "... src/ColorScheme.i"
 	@echo "... src/ColorScheme.s"
-	@echo "... src/ColorSchemeConverter.o"
-	@echo "... src/ColorSchemeConverter.i"
-	@echo "... src/ColorSchemeConverter.s"
 	@echo "... src/HueSmother.o"
 	@echo "... src/HueSmother.i"
 	@echo "... src/HueSmother.s"

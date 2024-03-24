@@ -18,8 +18,8 @@ public:
 
     void Set(const ColorImage& other);
 
-    int GetWidth();
-    int GetHeight();
+    int GetWidth() const;
+    int GetHeight() const;
 
 private:
     int GetIndexInArray(int x, int y) const;
