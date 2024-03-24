@@ -59,10 +59,10 @@ void ColorImage::Set(const ColorImage &other){
     }
 }
 
-int ColorImage::GetWidth(){
+int ColorImage::GetWidth() const {
     return width;
 }
 
-int ColorImage::GetHeight(){
+int ColorImage::GetHeight() const {
     return height;
 }

@@ -7,6 +7,9 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
 
+# Add compiler arguments
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} `pkg-config gtkmm-3.0 --cflags --libs`")
+
 file(GLOB SOURCE_FILES "src/*.cpp")
 
 add_executable(Color ${SOURCE_FILES})
