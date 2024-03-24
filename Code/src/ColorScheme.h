@@ -1,30 +1,29 @@
 #pragma once
 #include "Color.h"
 #include <vector>
+#include <iostream>
 
-class ColorScheme{
+struct ColorScheme{
 protected:
     std::vector<double> hues;
 
 public:
     ColorScheme(std::vector<double> hues);
-    Color GetClostesColorInScheme(const Color& color) const;
-
-private:
-    double GetClosestHue(double hue) const;
+    const std::vector<double>& GetHues() const { return hues; }
+    int GetNumberOfHues() const { return hues.size(); }
 };
 
-class MonochromeColorScheme : public ColorScheme{
+struct MonochromeColorScheme : public ColorScheme{
 public:
     MonochromeColorScheme(double hue): ColorScheme({hue}){}
 };
 
-class ComplementaryColorScheme : public ColorScheme{
+struct ComplementaryColorScheme : public ColorScheme{
 public:
     ComplementaryColorScheme(double hue): ColorScheme({hue, hue + 180}){}
 };
 
-class AnalogousColorScheme : public ColorScheme{
+struct AnalogousColorScheme : public ColorScheme{
 public:
     AnalogousColorScheme(double hue, double colorDistance, unsigned int numberOfHues): ColorScheme({hue}){
         for(unsigned int i = 1; i < (numberOfHues - 1) / 2; i++){
@@ -34,7 +33,7 @@ public:
     }
 };
 
-class TriadicColorScheme : public ColorScheme{
+struct TriadicColorScheme : public ColorScheme{
 public:
     TriadicColorScheme(double hue): ColorScheme({hue, hue + 120, hue + 240}){}
 };

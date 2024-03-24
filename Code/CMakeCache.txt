@@ -221,15 +221,6 @@ color_IS_TOP_LEVEL:STATIC=ON
 //Value Computed by CMake
 color_SOURCE_DIR:STATIC=/home/vincent/Dokumente/Uni/Compression/Project/PROJET-5.1_IMAGE_DELVIGNE_SCHMITT/Code
 
-//Value Computed by CMake
-tp6_BINARY_DIR:STATIC=/home/vincent/Dokumente/Uni/Compression/Project/PROJET-5.1_IMAGE_DELVIGNE_SCHMITT/Code
-
-//Value Computed by CMake
-tp6_IS_TOP_LEVEL:STATIC=ON
-
-//Value Computed by CMake
-tp6_SOURCE_DIR:STATIC=/home/vincent/Dokumente/Uni/Compression/Project/PROJET-5.1_IMAGE_DELVIGNE_SCHMITT/Code
-
 
 ########################
 # INTERNAL cache entries
