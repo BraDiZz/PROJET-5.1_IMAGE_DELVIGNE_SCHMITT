@@ -6,3 +6,9 @@
 *.make
 
 Code/CMakeFiles/
+
+*.cmake
+
+Code/Makefile
+
+Code/CMakeCache.txt
