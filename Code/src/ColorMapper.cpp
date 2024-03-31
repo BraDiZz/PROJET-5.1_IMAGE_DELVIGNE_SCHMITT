@@ -1,8 +1,7 @@
 #include "ColorMapper.h"
-#include <stdlib.h>
 #include <cmath>
 #include <iostream>
-
+#include <stdlib.h>
 
 // ############################################################################################################
 // #                                                                                                          #
@@ -10,10 +9,10 @@
 // #                                                                                                          #
 // ############################################################################################################
 
-void ColorMapper::ConvertToColorScheme(ColorImage &image){
+void ColorMapper::ConvertToColorScheme(ColorImage &image) {
     std::cout << "Converting to color scheme" << std::endl;
-    for(int x = 0; x < image.GetWidth(); x++){
-        for(int y = 0; y < image.GetHeight(); y++){
+    for (int x = 0; x < image.GetWidth(); x++) {
+        for (int y = 0; y < image.GetHeight(); y++) {
             Color pixel = image.GetPixel(x, y);
             Color newColor = MapColor(pixel);
             image.SetPixel(x, y, newColor);
@@ -21,14 +20,13 @@ void ColorMapper::ConvertToColorScheme(ColorImage &image){
     }
 }
 
-
 // ############################################################################################################
 // #                                                                                                          #
 // #                                                ClosestMapper                                              #
 // #                                                                                                          #
 // ############################################################################################################
 
-Color ClosestMapper::MapColor(Color color){
+Color ClosestMapper::MapColor(Color color) {
     auto originalHSLColor = color.GetHSL();
     double closestHue = GetClosestHue(originalHSLColor[0]);
 
@@ -37,14 +35,14 @@ Color ClosestMapper::MapColor(Color color){
     return closestColor;
 }
 
-double ClosestMapper::GetClosestHue(double hue) const{
+double ClosestMapper::GetClosestHue(double hue) const {
     hue = fmod(hue, 360);
 
     double minDistance = 360;
     double closestHue;
-    for(double h : colorScheme->GetHues()){
+    for (double h : colorScheme->GetHues()) {
         double distance = std::min(std::abs(h - hue), 360 - std::abs(h - hue));
-        if(distance < minDistance){
+        if (distance < minDistance) {
             minDistance = distance;
             closestHue = h;
         }
@@ -52,15 +50,13 @@ double ClosestMapper::GetClosestHue(double hue) const{
     return closestHue;
 }
 
-
 // ############################################################################################################
 // #                                                                                                          #
 // #                                        ClosestMapperWithOffset                                           #
 // #                                                                                                          #
 // ############################################################################################################
 
-Color ClosestMapperWithOffset::MapColor(Color color)
-{
+Color ClosestMapperWithOffset::MapColor(Color color) {
     auto originalHSLColor = color.GetHSL();
     double closestHue = GetClosestHue(originalHSLColor[0] + offset);
 
@@ -69,25 +65,24 @@ Color ClosestMapperWithOffset::MapColor(Color color)
     return closestColor;
 }
 
-
 // ############################################################################################################
 // #                                                                                                          #
 // #                                              HistogramMapper                                             #
 // #                                                                                                          #
 // ############################################################################################################
 
-HistogramMapper::HistogramMapper(ColorScheme *colorScheme, const ColorImage &image) : ColorMapper(colorScheme){
+HistogramMapper::HistogramMapper(std::shared_ptr<ColorScheme> colorScheme, const ColorImage &image) : ColorMapper(colorScheme) {
     std::vector<int> hueHistogram = GetHueHistogram(image);
     InitIntervals(hueHistogram);
-    for(ColorInterval interval : intervals){
+    for (ColorInterval interval : intervals) {
         printf("Interval: %f - %f -> %f\n", interval.start, interval.end, interval.hue);
     }
 }
 
-Color HistogramMapper::MapColor(Color color){
+Color HistogramMapper::MapColor(Color color) {
     auto originalHSLColor = color.GetHSL();
-    for(ColorInterval interval : intervals){
-        if(interval.Contains(originalHSLColor[0])){
+    for (ColorInterval interval : intervals) {
+        if (interval.Contains(originalHSLColor[0])) {
             Color newColor;
             newColor.SetHSL(interval.hue, originalHSLColor[1], originalHSLColor[2]);
             return newColor;
@@ -96,10 +91,10 @@ Color HistogramMapper::MapColor(Color color){
     return color;
 }
 
-std::vector<int> HistogramMapper::GetHueHistogram(const ColorImage &image) const{
+std::vector<int> HistogramMapper::GetHueHistogram(const ColorImage &image) const {
     std::vector<int> hueHistogram(360, 0);
-    for(int x = 0; x < image.GetWidth(); x++){
-        for(int y = 0; y < image.GetHeight(); y++){
+    for (int x = 0; x < image.GetWidth(); x++) {
+        for (int y = 0; y < image.GetHeight(); y++) {
             Color pixel = image.GetPixel(x, y);
             int hue = pixel.GetHSL()[0];
             hue = hue < 0 ? 0 : (hue > 359 ? 359 : hue);
@@ -109,18 +104,18 @@ std::vector<int> HistogramMapper::GetHueHistogram(const ColorImage &image) const
     return hueHistogram;
 }
 
-void HistogramMapper::InitIntervals(const std::vector<int> &hueHistogram){
+void HistogramMapper::InitIntervals(const std::vector<int> &hueHistogram) {
     std::vector<int> centroids = GetInitialCentroids(colorScheme->GetNumberOfHues());
     std::vector<int> newCentroids(centroids.size(), 0);
-    
+
     int iterations = 0;
-    while(centroids != newCentroids){
+    while (centroids != newCentroids) {
         iterations++;
         centroids = newCentroids;
         newCentroids = GetNewCentroids(hueHistogram, centroids);
     }
     std::cout << "Converged after " << iterations << " iterations" << std::endl;
-    for(int i = 0; i < centroids.size(); i++){
+    for (int i = 0; i < centroids.size(); i++) {
         ColorInterval interval;
         interval.start = GetLeftClusterBorder(centroids, i);
         interval.end = GetRightClusterBorder(centroids, i);
@@ -129,24 +124,24 @@ void HistogramMapper::InitIntervals(const std::vector<int> &hueHistogram){
     }
 }
 
-std::vector<int> HistogramMapper::GetInitialCentroids(int k) const{
+std::vector<int> HistogramMapper::GetInitialCentroids(int k) const {
     std::cout << k << std::endl;
     std::vector<int> centroids(k, 0);
-    for(int i = 0; i < k; i++){
+    for (int i = 0; i < k; i++) {
         centroids[i] = i * 360 / k;
     }
 
     return centroids;
 }
 
-std::vector<int> HistogramMapper::GetNewCentroids(const std::vector<int> &hueHistogram, const std::vector<int> &centroids) const{
+std::vector<int> HistogramMapper::GetNewCentroids(const std::vector<int> &hueHistogram, const std::vector<int> &centroids) const {
     std::vector<int> newCentroids(centroids.size(), 0);
-    for(int i = 0; i < centroids.size(); i++){
+    for (int i = 0; i < centroids.size(); i++) {
         int leftBorderOfCluster = GetLeftClusterBorder(centroids, i);
         int rightBorderOfCluster = GetRightClusterBorder(centroids, i);
         int sum = 0;
         int count = 0;
-        for(int j = leftBorderOfCluster; j != rightBorderOfCluster; j = (j + 1) % 360){
+        for (int j = leftBorderOfCluster; j != rightBorderOfCluster; j = (j + 1) % 360) {
             sum += hueHistogram[j] * j;
             count += hueHistogram[j];
         }
@@ -157,20 +152,18 @@ std::vector<int> HistogramMapper::GetNewCentroids(const std::vector<int> &hueHis
     return newCentroids;
 }
 
-int HistogramMapper::GetLeftClusterBorder(const std::vector<int> &centroids, int centroidIndex) const{
-    if (centroidIndex != 0){
+int HistogramMapper::GetLeftClusterBorder(const std::vector<int> &centroids, int centroidIndex) const {
+    if (centroidIndex != 0) {
         return std::ceil((centroids[centroidIndex - 1] + centroids[centroidIndex]) / 2);
-    }
-    else{
+    } else {
         return fmod(std::ceil((centroids[centroids.size() - 1] + centroids[centroidIndex] + 360) / 2), 360); // The + 360 is to handle the case where the cluster wraps around the 0/360 degree boundary
     }
 }
 
-int HistogramMapper::GetRightClusterBorder(const std::vector<int> &centroids, int centroidIndex) const{
-    if (centroidIndex != centroids.size() - 1){
+int HistogramMapper::GetRightClusterBorder(const std::vector<int> &centroids, int centroidIndex) const {
+    if (centroidIndex != centroids.size() - 1) {
         return std::floor((centroids[centroidIndex] + centroids[centroidIndex + 1]) / 2);
-    }
-    else{
+    } else {
         return fmod(std::floor((centroids[centroidIndex] + centroids[0] + 360) / 2), 360); // The + 360 is to handle the case where the cluster wraps around the 0/360 degree boundary
     }
 }
