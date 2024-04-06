@@ -2,6 +2,7 @@
 #include "ColorMapper.h"
 #include "ColorScheme.h"
 #include "HueSmother.h"
+#include "PaletteSelection.h"
 #include <cstring>
 #include <iostream>
 
@@ -272,6 +273,7 @@ int main(int argc, char *argv[]) {
 
     Gtk::Button buttonSave("Sauvegarder l'image");
     buttonSave.signal_clicked().connect([&window, &image_path, &Entry_Image_Out]() { click_save(window, image_path, Entry_Image_Out); });
+    PaletteSelection paletteSelection;
 
     // Gtk::Button buttonScheme("Appliquer schéma");
     // buttonScheme.signal_clicked().connect([&window,& ImageOut,&image_path,& buttonHue1,&Scheme_mode]() { click_scheme(window,ImageOut,image_path,buttonHue1,Scheme_mode); });
@@ -296,6 +298,7 @@ int main(int argc, char *argv[]) {
 
     grid.attach(ImageIn, 0, 4, 5, 1);
     grid.attach(ImageOut, 5, 4, 5, 1);
+    grid.attach(paletteSelection, 0, 6, 10, 1);
 
     // Ajout de la boîte à la fenêtre
 

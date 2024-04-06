@@ -70,6 +70,6 @@ private:
     void InitIntervals(const std::vector<int> &hueHistogram); // Create intervals based on the histogram by using k-means clustering
     std::vector<int> GetInitialCentroids(int k) const;
     std::vector<int> GetNewCentroids(const std::vector<int> &hueHistogram, const std::vector<int> &centroids) const;
-    int GetLeftClusterBorder(const std::vector<int> &centroids, int centroidIndex) const;
-    int GetRightClusterBorder(const std::vector<int> &centroids, int centroidIndex) const;
+    int GetLeftClusterBorder(const std::vector<int> &centroids, size_t centroidIndex) const;
+    int GetRightClusterBorder(const std::vector<int> &centroids, size_t centroidIndex) const;
 };

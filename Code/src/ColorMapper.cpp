@@ -40,11 +40,11 @@ double ClosestMapper::GetClosestHue(double hue) const {
 
     double minDistance = 360;
     double closestHue;
-    for (double h : colorScheme->GetHues()) {
-        double distance = std::min(std::abs(h - hue), 360 - std::abs(h - hue));
+    for (ColorSchemeColor color : colorScheme->GetColors()) {
+        double distance = std::min(std::abs(color.hue - hue), 360 - std::abs(color.hue - hue));
         if (distance < minDistance) {
             minDistance = distance;
-            closestHue = h;
+            closestHue = color.hue;
         }
     }
     return closestHue;
@@ -105,7 +105,7 @@ std::vector<int> HistogramMapper::GetHueHistogram(const ColorImage &image) const
 }
 
 void HistogramMapper::InitIntervals(const std::vector<int> &hueHistogram) {
-    std::vector<int> centroids = GetInitialCentroids(colorScheme->GetNumberOfHues());
+    std::vector<int> centroids = GetInitialCentroids(colorScheme->GetNumberOfColors());
     std::vector<int> newCentroids(centroids.size(), 0);
 
     int iterations = 0;
@@ -115,11 +115,11 @@ void HistogramMapper::InitIntervals(const std::vector<int> &hueHistogram) {
         newCentroids = GetNewCentroids(hueHistogram, centroids);
     }
     std::cout << "Converged after " << iterations << " iterations" << std::endl;
-    for (int i = 0; i < centroids.size(); i++) {
+    for (size_t i = 0; i < centroids.size(); i++) {
         ColorInterval interval;
         interval.start = GetLeftClusterBorder(centroids, i);
         interval.end = GetRightClusterBorder(centroids, i);
-        interval.hue = colorScheme->GetHues()[i];
+        interval.hue = colorScheme->GetColors()[i].hue;
         intervals.push_back(interval);
     }
 }
@@ -136,7 +136,7 @@ std::vector<int> HistogramMapper::GetInitialCentroids(int k) const {
 
 std::vector<int> HistogramMapper::GetNewCentroids(const std::vector<int> &hueHistogram, const std::vector<int> &centroids) const {
     std::vector<int> newCentroids(centroids.size(), 0);
-    for (int i = 0; i < centroids.size(); i++) {
+    for (size_t i = 0; i < centroids.size(); i++) {
         int leftBorderOfCluster = GetLeftClusterBorder(centroids, i);
         int rightBorderOfCluster = GetRightClusterBorder(centroids, i);
         int sum = 0;
@@ -152,7 +152,7 @@ std::vector<int> HistogramMapper::GetNewCentroids(const std::vector<int> &hueHis
     return newCentroids;
 }
 
-int HistogramMapper::GetLeftClusterBorder(const std::vector<int> &centroids, int centroidIndex) const {
+int HistogramMapper::GetLeftClusterBorder(const std::vector<int> &centroids, size_t centroidIndex) const {
     if (centroidIndex != 0) {
         return std::ceil((centroids[centroidIndex - 1] + centroids[centroidIndex]) / 2);
     } else {
@@ -160,7 +160,7 @@ int HistogramMapper::GetLeftClusterBorder(const std::vector<int> &centroids, int
     }
 }
 
-int HistogramMapper::GetRightClusterBorder(const std::vector<int> &centroids, int centroidIndex) const {
+int HistogramMapper::GetRightClusterBorder(const std::vector<int> &centroids, size_t centroidIndex) const {
     if (centroidIndex != centroids.size() - 1) {
         return std::floor((centroids[centroidIndex] + centroids[centroidIndex + 1]) / 2);
     } else {

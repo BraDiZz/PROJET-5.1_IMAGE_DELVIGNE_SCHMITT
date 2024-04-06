@@ -1,7 +1,10 @@
 #pragma once
 #include "Color.h"
+#include <algorithm>
+#include <cmath>
 #include <iostream>
 #include <vector>
+
 enum struct ColorSchemeType {
     Monochrome,
     Complementary,
@@ -9,14 +12,21 @@ enum struct ColorSchemeType {
     Analogous
 };
 
+struct ColorSchemeColor {
+    double hue;
+    double saturation = 1;
+
+    ColorSchemeColor(double hueIn, double saturationIn = 1) : hue(fmod(hueIn, 360)), saturation(std::clamp(saturationIn, 0.0, 1.0)) {}
+};
+
 struct ColorScheme {
 protected:
-    std::vector<double> hues;
+    std::vector<ColorSchemeColor> colors;
 
 public:
-    ColorScheme(std::vector<double> hues);
-    const std::vector<double> &GetHues() const { return hues; }
-    int GetNumberOfHues() const { return hues.size(); }
+    ColorScheme(std::vector<ColorSchemeColor> colors) : colors(colors){};
+    const std::vector<ColorSchemeColor> &GetColors() const { return colors; }
+    int GetNumberOfColors() const { return colors.size(); }
 };
 
 struct MonochromeColorScheme : public ColorScheme {
@@ -33,8 +43,8 @@ struct AnalogousColorScheme : public ColorScheme {
 public:
     AnalogousColorScheme(double hue, double colorDistance, unsigned int numberOfHues) : ColorScheme({hue}) {
         for (unsigned int i = 1; i < (numberOfHues - 1) / 2; i++) {
-            this->hues.push_back(hue + i * colorDistance);
-            this->hues.push_back(hue - i * colorDistance);
+            this->colors.emplace_back(hue + i * colorDistance);
+            this->colors.emplace_back(hue - i * colorDistance);
         }
     }
 };
