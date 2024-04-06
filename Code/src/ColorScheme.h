@@ -9,7 +9,8 @@ enum struct ColorSchemeType {
     Monochrome,
     Complementary,
     Triadic,
-    Analogous
+    Analogous,
+    Manual
 };
 
 struct ColorSchemeColor {

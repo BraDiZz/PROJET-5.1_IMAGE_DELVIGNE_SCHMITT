@@ -1,18 +1,66 @@
 #include "PaletteSelection.h"
 
 PaletteSelection::PaletteSelection() {
-    set_orientation(Gtk::ORIENTATION_HORIZONTAL);
+    set_orientation(Gtk::ORIENTATION_VERTICAL);
+    pack_start(buttonBox, Gtk::PACK_SHRINK, 0);
+    pack_start(colorBox, Gtk::PACK_SHRINK, 0);
 
     set_margin_start(10);  // Set margin on the start side
     set_margin_end(10);    // Set margin on the end side
     set_margin_top(10);    // Set margin on the top side
     set_margin_bottom(10); // Set margin on the bottom side
 
-    separator.set_size_request(10, -1);
+    InitializeButtons();
+    colorSelectors.emplace_back();
+    SetColorSchemeMode(ColorSchemeType::Monochrome);
+}
 
-    colorSelector1.SetHue(100);
+void PaletteSelection::InitializeButtons() {
+    InitializeButton(monochromeButton, "Monochrome", ColorSchemeType::Monochrome);
+    InitializeButton(complementaryButton, "Complementary", ColorSchemeType::Complementary);
+    InitializeButton(triadicButton, "Triadic", ColorSchemeType::Triadic);
+    InitializeButton(analogousButton, "Analogous", ColorSchemeType::Analogous);
+    InitializeButton(manualButton, "Manual", ColorSchemeType::Manual);
+}
 
-    pack_start(colorSelector1, Gtk::PACK_SHRINK, 0);
-    pack_start(separator, Gtk::PACK_SHRINK, 0);
-    pack_start(colorSelector2, Gtk::PACK_SHRINK, 0);
+void PaletteSelection::InitializeButton(Gtk::Button &button, const std::string &label, ColorSchemeType mode) {
+    button.set_label(label);
+    button.set_margin_start(5);
+    button.set_margin_end(5);
+    button.signal_clicked().connect(sigc::bind(sigc::mem_fun(*this, &PaletteSelection::SetColorSchemeMode), mode));
+    buttonBox.pack_start(button, Gtk::PACK_SHRINK, 0);
+}
+
+void PaletteSelection::SetColorSchemeMode(ColorSchemeType mode) {
+    switch (mode) {
+    case ColorSchemeType::Monochrome:
+        colorScheme = std::make_shared<MonochromeColorScheme>(colorSelectors[0].GetHue());
+        break;
+    case ColorSchemeType::Complementary:
+        colorScheme = std::make_shared<ComplementaryColorScheme>(colorSelectors[0].GetHue());
+        break;
+    case ColorSchemeType::Triadic:
+        colorScheme = std::make_shared<TriadicColorScheme>(colorSelectors[0].GetHue());
+        break;
+    case ColorSchemeType::Analogous:
+        colorScheme = std::make_shared<AnalogousColorScheme>(colorSelectors[0].GetHue(), 30, 5);
+        break;
+    case ColorSchemeType::Manual:
+        return;
+    }
+
+    colorSelectors.clear();
+    for (const auto &color : colorScheme->GetColors()) {
+        colorSelectors.emplace_back();
+        colorSelectors.back().SetHue(color.hue);
+        colorSelectors.back().SetSaturation(color.saturation);
+    }
+    DrawColorSelectors();
+}
+
+void PaletteSelection::DrawColorSelectors() {
+    for (auto &colorSelector : colorSelectors) {
+        colorBox.pack_start(colorSelector, Gtk::PACK_SHRINK, 0);
+    }
+    colorBox.show_all();
 }
