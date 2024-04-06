@@ -12,13 +12,16 @@ class ColorSelector : public Gtk::Grid {
 
     Gtk::Frame colorFrame;
     Gtk::Scale hueScale;
+    Gtk::Label hueLabel;
 
 public:
     ColorSelector();
+    void SetHue(double hue);
 
 private:
     void OnHueScaleValueChanged();
 
     void UpdateFrameColor();
     void UpdateHueScale();
+    void UpdateHueLabel();
 };

@@ -10,6 +10,8 @@ PaletteSelection::PaletteSelection() {
 
     separator.set_size_request(10, -1);
 
+    colorSelector1.SetHue(100);
+
     pack_start(colorSelector1, Gtk::PACK_SHRINK, 0);
     pack_start(separator, Gtk::PACK_SHRINK, 0);
     pack_start(colorSelector2, Gtk::PACK_SHRINK, 0);
