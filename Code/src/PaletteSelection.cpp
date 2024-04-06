@@ -2,7 +2,9 @@
 
 PaletteSelection::PaletteSelection() {
     set_orientation(Gtk::ORIENTATION_VERTICAL);
+    separator.set_size_request(-1, 10);
     pack_start(buttonBox, Gtk::PACK_SHRINK, 0);
+    pack_start(separator, Gtk::PACK_SHRINK, 0);
     pack_start(colorBox, Gtk::PACK_SHRINK, 0);
 
     set_margin_start(10);  // Set margin on the start side
@@ -46,7 +48,8 @@ void PaletteSelection::SetColorSchemeMode(ColorSchemeType mode) {
         colorScheme = std::make_shared<AnalogousColorScheme>(colorSelectors[0].GetHue(), 30, 5);
         break;
     case ColorSchemeType::Manual:
-        return;
+        colorScheme = std::make_shared<ColorScheme>(std::vector<ColorSchemeColor>{colorSelectors[0].GetHue(), colorSelectors[0].GetHue() + 10, colorSelectors[0].GetHue() + 20, colorSelectors[0].GetHue() + 30, colorSelectors[0].GetHue() + 40});
+        break;
     }
 
     colorSelectors.clear();
