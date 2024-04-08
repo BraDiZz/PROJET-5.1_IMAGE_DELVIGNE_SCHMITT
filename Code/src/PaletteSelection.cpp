@@ -58,6 +58,11 @@ void PaletteSelection::SetColorSchemeMode(ColorSchemeType mode) {
         colorSelectors.back().SetHue(color.hue);
         colorSelectors.back().SetSaturation(color.saturation);
     }
+    if (mode != ColorSchemeType::Manual) {
+        for (int i = 1; i < colorScheme->GetNumberOfColors(); i++) {
+            colorSelectors[i].SetShowHueScale(false);
+        }
+    }
     DrawColorSelectors();
 }
 
@@ -65,5 +70,4 @@ void PaletteSelection::DrawColorSelectors() {
     for (auto &colorSelector : colorSelectors) {
         colorBox.pack_start(colorSelector, Gtk::PACK_SHRINK, 0);
     }
-    colorBox.show_all();
 }

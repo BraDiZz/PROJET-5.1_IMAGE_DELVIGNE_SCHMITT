@@ -25,6 +25,8 @@ ColorSelector::ColorSelector() : saturationScale(Gtk::ORIENTATION_VERTICAL) {
     attach(saturationScale, 0, 0, 1, 1);
     attach(colorFrame, 1, 0, 1, 1);
     attach(hueScale, 1, 1, 1, 1);
+
+    show_all();
 }
 
 void ColorSelector::SetHue(double hue) {
