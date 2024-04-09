@@ -6,6 +6,8 @@
 #include <gtkmm/label.h>
 #include <memory>
 
+using ColorSchemeChangedCallback = std::function<void()>;
+
 class PaletteSelection : public Gtk::Box {
     Gtk::Box buttonBox;
     Gtk::Separator separator;
@@ -21,8 +23,12 @@ class PaletteSelection : public Gtk::Box {
 
     std::shared_ptr<ColorScheme> colorScheme;
 
+    ColorSchemeChangedCallback callback;
+
 public:
-    PaletteSelection();
+    PaletteSelection(ColorSchemeChangedCallback callback);
+
+    std::shared_ptr<ColorScheme> GetColorScheme() const { return colorScheme; }
 
 private:
     void InitializeButtons();

@@ -61,6 +61,47 @@ void find_image(Gtk::Window &parent_window, char image_path[250], Gtk::Image &Im
     }
 }
 
+void OnColorSchemeChanged(Gtk::Window &parent_window, Gtk::Image &ImageOut, char image_path[250], Gtk::SpinButton &buttonHue1, Gtk::SpinButton &buttonDistance, Gtk::SpinButton &buttonNumberHues, ColorMapperType mapperType, const PaletteSelection &paletteSelection) {
+    if (strcmp(image_path, "") != 0) {
+        if (buttonHue1.get_value() == -1)
+            buttonHue1.set_value(360);
+        if (buttonHue1.get_value() == 361)
+            buttonHue1.set_value(0);
+        ColorImage img(image_path);
+        std::unique_ptr<ColorMapper> mapper;
+        std::shared_ptr<ColorScheme> colorScheme = paletteSelection.GetColorScheme();
+
+        switch (mapperType) {
+        case ColorMapperType::Closest:
+            mapper = std::make_unique<ClosestMapper>(colorScheme);
+            break;
+        case ColorMapperType::ClosestWithOffset:
+            mapper = std::make_unique<ClosestMapperWithOffset>(colorScheme, buttonDistance.get_value());
+            break;
+        case ColorMapperType::Histogram:
+            mapper = std::make_unique<HistogramMapper>(colorScheme, img);
+            break;
+        default:
+            throw std::runtime_error("Invalid mapper type");
+        }
+
+        mapper->ConvertToColorScheme(img);
+
+        std::string str_image_path = std::string(image_path);
+        size_t last_slash = str_image_path.find_last_of("/");
+        std::string path_prefix = str_image_path.substr(0, last_slash);
+        last_slash = path_prefix.find_last_of("/");
+        std::string final_path_prefix = path_prefix.substr(0, last_slash + 1);
+        final_path_prefix += "ImagesOut/tmp.ppm";
+        char newPath[250];
+
+        std::strcpy(newPath, final_path_prefix.c_str());
+        img.Write(newPath);
+        Glib::RefPtr<Gdk::Pixbuf> pixbuf = Gdk::Pixbuf::create_from_file(newPath);
+        ImageOut.set(pixbuf);
+    }
+}
+
 void click_scheme(Gtk::Window &parent_window, Gtk::Image &ImageOut, char image_path[250], Gtk::SpinButton &buttonHue1, Gtk::SpinButton &buttonDistance, Gtk::SpinButton &buttonNumberHues, ColorSchemeType schemeType, ColorMapperType mapperType) {
     if (strcmp(image_path, "") != 0) {
         if (buttonHue1.get_value() == -1)
@@ -275,7 +316,9 @@ int main(int argc, char *argv[]) {
 
     Gtk::Button buttonSave("Sauvegarder l'image");
     buttonSave.signal_clicked().connect([&window, &image_path, &Entry_Image_Out]() { click_save(window, image_path, Entry_Image_Out); });
-    PaletteSelection paletteSelection;
+    PaletteSelection paletteSelection([&]() {
+        OnColorSchemeChanged(window, ImageOut, image_path, buttonHue1, buttonDistance, buttonNumberHues, ColorMapperType::Closest, paletteSelection);
+    });
 
     // Gtk::Button buttonScheme("Appliquer schéma");
     // buttonScheme.signal_clicked().connect([&window,& ImageOut,&image_path,& buttonHue1,&Scheme_mode]() { click_scheme(window,ImageOut,image_path,buttonHue1,Scheme_mode); });

@@ -1,6 +1,6 @@
 #include "PaletteSelection.h"
 
-PaletteSelection::PaletteSelection() {
+PaletteSelection::PaletteSelection(ColorSchemeChangedCallback callback) : callback(callback) {
     set_orientation(Gtk::ORIENTATION_VERTICAL);
     separator.set_size_request(-1, 10);
     pack_start(buttonBox, Gtk::PACK_SHRINK, 0);
@@ -67,9 +67,6 @@ void PaletteSelection::SetColorSchemeMode(ColorSchemeType mode) {
         colorSelectors.back().SetSaturation(colorSchemeColors[i].saturation);
     }
 
-    std::cout << "Number of colors after construction:  " << colorScheme->GetNumberOfColors() << std::endl;
-    std::cout << "Number of ColorSelectors after construction: " << colorSelectors.size() << std::endl;
-
     DrawColorSelectors();
 }
 
@@ -81,9 +78,6 @@ void PaletteSelection::DrawColorSelectors() {
 
 void PaletteSelection::OnColorChanged(int colorSelectorIndex) {
     colorScheme->SetColor(colorSelectorIndex, colorSelectors[colorSelectorIndex].GetHue(), colorSelectors[colorSelectorIndex].GetSaturation());
-    std::cout << "Color changed:  " << colorSelectorIndex << std::endl;
-    std::cout << "Number of colors:  " << colorScheme->GetNumberOfColors() << std::endl;
-    std::cout << "Number of ColorSelectors: " << colorSelectors.size() << std::endl;
     for (int i = 0; i < colorScheme->GetNumberOfColors(); i++) {
         if (colorSelectors[i].GetHue() != colorScheme->GetColors()[i].hue) {
             colorSelectors[i].SetHue(colorScheme->GetColors()[i].hue);
@@ -92,4 +86,5 @@ void PaletteSelection::OnColorChanged(int colorSelectorIndex) {
             colorSelectors[i].SetSaturation(colorScheme->GetColors()[i].saturation);
         }
     }
+    callback();
 }
