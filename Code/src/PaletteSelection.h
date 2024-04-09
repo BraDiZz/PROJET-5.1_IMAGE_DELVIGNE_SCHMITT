@@ -31,4 +31,6 @@ private:
     void SetColorSchemeMode(ColorSchemeType mode);
 
     void DrawColorSelectors();
+
+    void OnColorChanged(int colorSelectorIndex);
 };

@@ -13,7 +13,7 @@ PaletteSelection::PaletteSelection() {
     set_margin_bottom(10); // Set margin on the bottom side
 
     InitializeButtons();
-    colorSelectors.emplace_back();
+    colorSelectors.emplace_back([this] { OnColorChanged(0); });
     SetColorSchemeMode(ColorSchemeType::Monochrome);
 }
 
@@ -53,21 +53,43 @@ void PaletteSelection::SetColorSchemeMode(ColorSchemeType mode) {
     }
 
     colorSelectors.clear();
-    for (const auto &color : colorScheme->GetColors()) {
-        colorSelectors.emplace_back();
-        colorSelectors.back().SetHue(color.hue);
-        colorSelectors.back().SetSaturation(color.saturation);
+    auto colorSchemeColors = colorScheme->GetColors();
+    for (int i = 0; i < colorScheme->GetNumberOfColors(); i++) {
+        colorSelectors.emplace_back([this, i] { OnColorChanged(i); });
     }
-    if (mode != ColorSchemeType::Manual) {
-        for (int i = 1; i < colorScheme->GetNumberOfColors(); i++) {
+
+    for (int i = 1; i < colorScheme->GetNumberOfColors(); i++) {
+        if (mode != ColorSchemeType::Manual) {
             colorSelectors[i].SetShowHueScale(false);
         }
+
+        colorSelectors.back().SetHue(colorSchemeColors[i].hue);
+        colorSelectors.back().SetSaturation(colorSchemeColors[i].saturation);
     }
+
+    std::cout << "Number of colors after construction:  " << colorScheme->GetNumberOfColors() << std::endl;
+    std::cout << "Number of ColorSelectors after construction: " << colorSelectors.size() << std::endl;
+
     DrawColorSelectors();
 }
 
 void PaletteSelection::DrawColorSelectors() {
     for (auto &colorSelector : colorSelectors) {
         colorBox.pack_start(colorSelector, Gtk::PACK_SHRINK, 0);
+    }
+}
+
+void PaletteSelection::OnColorChanged(int colorSelectorIndex) {
+    colorScheme->SetColor(colorSelectorIndex, colorSelectors[colorSelectorIndex].GetHue(), colorSelectors[colorSelectorIndex].GetSaturation());
+    std::cout << "Color changed:  " << colorSelectorIndex << std::endl;
+    std::cout << "Number of colors:  " << colorScheme->GetNumberOfColors() << std::endl;
+    std::cout << "Number of ColorSelectors: " << colorSelectors.size() << std::endl;
+    for (int i = 0; i < colorScheme->GetNumberOfColors(); i++) {
+        if (colorSelectors[i].GetHue() != colorScheme->GetColors()[i].hue) {
+            colorSelectors[i].SetHue(colorScheme->GetColors()[i].hue);
+        }
+        if (colorSelectors[i].GetSaturation() != colorScheme->GetColors()[i].saturation) {
+            colorSelectors[i].SetSaturation(colorScheme->GetColors()[i].saturation);
+        }
     }
 }

@@ -1,7 +1,8 @@
 #include "ColorSelector.h"
 #include <cmath>
+#include <iostream>
 
-ColorSelector::ColorSelector() : saturationScale(Gtk::ORIENTATION_VERTICAL) {
+ColorSelector::ColorSelector(ColorChangedCallback callback) : saturationScale(Gtk::ORIENTATION_VERTICAL), colorChangedCallback(callback) {
     UpdateFrameColor();
     colorFrame.set_size_request(frameWidth, frameHeight);
 
@@ -54,11 +55,17 @@ void ColorSelector::OnHueScaleValueChanged() {
     hue = hueScale.get_value();
     UpdateFrameColor();
     UpdateHueLabel();
+    if (colorChangedCallback) {
+        colorChangedCallback();
+    }
 }
 
 void ColorSelector::OnSaturationScaleValueChanged() {
     saturation = saturationScale.get_value() / 100.0;
     UpdateFrameColor();
+    if (colorChangedCallback) {
+        colorChangedCallback();
+    }
 }
 
 void ColorSelector::UpdateFrameColor() {

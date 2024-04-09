@@ -62,59 +62,61 @@ void find_image(Gtk::Window &parent_window, char image_path[250], Gtk::Image &Im
 }
 
 void click_scheme(Gtk::Window &parent_window, Gtk::Image &ImageOut, char image_path[250], Gtk::SpinButton &buttonHue1, Gtk::SpinButton &buttonDistance, Gtk::SpinButton &buttonNumberHues, ColorSchemeType schemeType, ColorMapperType mapperType) {
-    if (buttonHue1.get_value() == -1)
-        buttonHue1.set_value(360);
-    if (buttonHue1.get_value() == 361)
-        buttonHue1.set_value(0);
-    ColorImage img(image_path);
-    std::unique_ptr<ColorMapper> mapper;
-    std::shared_ptr<ColorScheme> colorScheme;
+    if (strcmp(image_path, "") != 0) {
+        if (buttonHue1.get_value() == -1)
+            buttonHue1.set_value(360);
+        if (buttonHue1.get_value() == 361)
+            buttonHue1.set_value(0);
+        ColorImage img(image_path);
+        std::unique_ptr<ColorMapper> mapper;
+        std::shared_ptr<ColorScheme> colorScheme;
 
-    switch (schemeType) {
-    case ColorSchemeType::Monochrome:
-        colorScheme = std::make_shared<MonochromeColorScheme>(buttonHue1.get_value());
-        break;
-    case ColorSchemeType::Complementary:
-        colorScheme = std::make_shared<ComplementaryColorScheme>(buttonHue1.get_value());
-        break;
-    case ColorSchemeType::Triadic:
-        colorScheme = std::make_shared<TriadicColorScheme>(buttonHue1.get_value());
-        break;
-    case ColorSchemeType::Analogous:
-        colorScheme = std::make_shared<AnalogousColorScheme>(buttonHue1.get_value(), buttonDistance.get_value(), buttonNumberHues.get_value());
-        break;
-    default:
-        throw std::runtime_error("Invalid color scheme type");
+        switch (schemeType) {
+        case ColorSchemeType::Monochrome:
+            colorScheme = std::make_shared<MonochromeColorScheme>(buttonHue1.get_value());
+            break;
+        case ColorSchemeType::Complementary:
+            colorScheme = std::make_shared<ComplementaryColorScheme>(buttonHue1.get_value());
+            break;
+        case ColorSchemeType::Triadic:
+            colorScheme = std::make_shared<TriadicColorScheme>(buttonHue1.get_value());
+            break;
+        case ColorSchemeType::Analogous:
+            colorScheme = std::make_shared<AnalogousColorScheme>(buttonHue1.get_value(), buttonDistance.get_value(), buttonNumberHues.get_value());
+            break;
+        default:
+            throw std::runtime_error("Invalid color scheme type");
+        }
+
+        switch (mapperType) {
+        case ColorMapperType::Closest:
+            mapper = std::make_unique<ClosestMapper>(colorScheme);
+            break;
+        case ColorMapperType::ClosestWithOffset:
+            mapper = std::make_unique<ClosestMapperWithOffset>(colorScheme, buttonDistance.get_value());
+            break;
+        case ColorMapperType::Histogram:
+            mapper = std::make_unique<HistogramMapper>(colorScheme, img);
+            break;
+        default:
+            throw std::runtime_error("Invalid mapper type");
+        }
+
+        mapper->ConvertToColorScheme(img);
+
+        std::string str_image_path = std::string(image_path);
+        size_t last_slash = str_image_path.find_last_of("/");
+        std::string path_prefix = str_image_path.substr(0, last_slash);
+        last_slash = path_prefix.find_last_of("/");
+        std::string final_path_prefix = path_prefix.substr(0, last_slash + 1);
+        final_path_prefix += "ImagesOut/tmp.ppm";
+        char newPath[250];
+
+        std::strcpy(newPath, final_path_prefix.c_str());
+        img.Write(newPath);
+        Glib::RefPtr<Gdk::Pixbuf> pixbuf = Gdk::Pixbuf::create_from_file(newPath);
+        ImageOut.set(pixbuf);
     }
-
-    switch (mapperType) {
-    case ColorMapperType::Closest:
-        mapper = std::make_unique<ClosestMapper>(colorScheme);
-        break;
-    case ColorMapperType::ClosestWithOffset:
-        mapper = std::make_unique<ClosestMapperWithOffset>(colorScheme, buttonDistance.get_value());
-        break;
-    case ColorMapperType::Histogram:
-        mapper = std::make_unique<HistogramMapper>(colorScheme, img);
-        break;
-    default:
-        throw std::runtime_error("Invalid mapper type");
-    }
-
-    mapper->ConvertToColorScheme(img);
-
-    std::string str_image_path = std::string(image_path);
-    size_t last_slash = str_image_path.find_last_of("/");
-    std::string path_prefix = str_image_path.substr(0, last_slash);
-    last_slash = path_prefix.find_last_of("/");
-    std::string final_path_prefix = path_prefix.substr(0, last_slash + 1);
-    final_path_prefix += "ImagesOut/tmp.ppm";
-    char newPath[250];
-
-    std::strcpy(newPath, final_path_prefix.c_str());
-    img.Write(newPath);
-    Glib::RefPtr<Gdk::Pixbuf> pixbuf = Gdk::Pixbuf::create_from_file(newPath);
-    ImageOut.set(pixbuf);
 }
 
 void click_mono(Gtk::Window &parent_window, ColorSchemeType &Scheme_mode, Gtk::Grid &grid, Gtk::SpinButton &buttonHue1) {
@@ -222,7 +224,7 @@ int main(int argc, char *argv[]) {
     Gtk::Entry entry;
     Gtk::Entry Entry_Image_Out;
     Entry_Image_Out.set_text("Nom_de_l'image");
-    char image_path[250];
+    char image_path[250] = "";
     Gtk::Image ImageIn;
     Gtk::Image ImageOut;
 

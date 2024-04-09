@@ -1,8 +1,11 @@
 #pragma once
+#include <functional>
 #include <gtkmm/frame.h>
 #include <gtkmm/grid.h>
 #include <gtkmm/scale.h>
 #include <gtkmm/spinbutton.h>
+
+using ColorChangedCallback = std::function<void()>;
 
 class ColorSelector : public Gtk::Grid {
     int frameWidth = 100;
@@ -18,8 +21,10 @@ class ColorSelector : public Gtk::Grid {
 
     bool showHueScale = true;
 
+    ColorChangedCallback colorChangedCallback;
+
 public:
-    ColorSelector();
+    ColorSelector(ColorChangedCallback colorChangedCallback = nullptr);
     void SetHue(double hue);
     double GetHue() const { return hue; }
     void SetSaturation(double saturation);
