@@ -1,8 +1,9 @@
 #include "PaletteSelection.h"
 
-PaletteSelection::PaletteSelection(ColorSchemeChangedCallback callback) : callback(callback) {
+PaletteSelection::PaletteSelection(ColorSchemeChangedCallback callback) : plusAndMinusButtons([this](PlusAndMinusButtonsType type) { OnPlusOrMinusClicked(type); }), callback(callback) {
     set_orientation(Gtk::ORIENTATION_VERTICAL);
     colorBox.set_margin_top(10); // Set margin on the start side
+    colorBox.set_valign(Gtk::ALIGN_CENTER);
     pack_start(buttonBox, Gtk::PACK_SHRINK, 0);
     pack_start(colorBox, Gtk::PACK_SHRINK, 0);
 
@@ -33,6 +34,7 @@ void PaletteSelection::InitializeButton(Gtk::Button &button, const std::string &
 }
 
 void PaletteSelection::SetColorSchemeMode(ColorSchemeType mode) {
+    colorSchemeType = mode;
     switch (mode) {
     case ColorSchemeType::Monochrome:
         colorScheme = std::make_shared<MonochromeColorScheme>(colorSelectors[0].GetHue());
@@ -44,10 +46,14 @@ void PaletteSelection::SetColorSchemeMode(ColorSchemeType mode) {
         colorScheme = std::make_shared<TriadicColorScheme>(colorSelectors[0].GetHue());
         break;
     case ColorSchemeType::Analogous:
-        colorScheme = std::make_shared<AnalogousColorScheme>(colorSelectors[0].GetHue(), 30, 5);
+        colorScheme = std::make_shared<AnalogousColorScheme>(colorSelectors[0].GetHue(), 20, numberOfColorsAnalogous);
         break;
     case ColorSchemeType::Manual:
-        colorScheme = std::make_shared<ColorScheme>(std::vector<ColorSchemeColor>{colorSelectors[0].GetHue(), colorSelectors[0].GetHue() + 10, colorSelectors[0].GetHue() + 20, colorSelectors[0].GetHue() + 30, colorSelectors[0].GetHue() + 40});
+        std::vector<ColorSchemeColor> colors;
+        for (int i = 0; i < numberOfColorsManual; i++) {
+            colors.emplace_back(colorSelectors[0].GetHue() + i * 10, colorSelectors[0].GetSaturation());
+        }
+        colorScheme = std::make_shared<ColorScheme>(colors);
         break;
     }
 
@@ -70,8 +76,13 @@ void PaletteSelection::SetColorSchemeMode(ColorSchemeType mode) {
 }
 
 void PaletteSelection::DrawColorSelectors() {
+    colorBox.remove(plusAndMinusButtons);
     for (auto &colorSelector : colorSelectors) {
         colorBox.pack_start(colorSelector, Gtk::PACK_SHRINK, 0);
+    }
+    if (colorSchemeType == ColorSchemeType::Analogous || colorSchemeType == ColorSchemeType::Manual) {
+        colorBox.pack_start(plusAndMinusButtons, Gtk::PACK_SHRINK, 0);
+        plusAndMinusButtons.set_valign(Gtk::ALIGN_CENTER); // Center the plus and minus buttons vertically
     }
 }
 
@@ -86,4 +97,25 @@ void PaletteSelection::OnColorChanged(int colorSelectorIndex) {
         }
     }
     callback();
+}
+
+void PaletteSelection::OnPlusOrMinusClicked(PlusAndMinusButtonsType type) {
+    int addition = 0;
+
+    if (type == PlusAndMinusButtonsType::Plus) {
+        addition = 1;
+    } else {
+        addition = -1;
+    }
+
+    if (colorSchemeType == ColorSchemeType::Analogous) {
+        numberOfColorsAnalogous += addition;
+        numberOfColorsAnalogous = std::clamp(numberOfColorsAnalogous, 1, 7);
+    }
+    if (colorSchemeType == ColorSchemeType::Manual) {
+        numberOfColorsManual += addition;
+        numberOfColorsManual = std::clamp(numberOfColorsManual, 1, 7);
+    }
+
+    SetColorSchemeMode(colorSchemeType);
 }

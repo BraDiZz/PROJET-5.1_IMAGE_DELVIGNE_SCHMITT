@@ -28,26 +28,26 @@ void ColorMapper::ConvertToColorScheme(ColorImage &image) {
 
 Color ClosestMapper::MapColor(Color color) {
     auto originalHSLColor = color.GetHSL();
-    double closestHue = GetClosestHue(originalHSLColor[0]);
+    auto closest = GetClosestColor(originalHSLColor[0]);
 
     Color closestColor;
-    closestColor.SetHSL(closestHue, originalHSLColor[1], originalHSLColor[2]);
+    closestColor.SetHSL(closest.hue, originalHSLColor[1], originalHSLColor[2]);
     return closestColor;
 }
 
-double ClosestMapper::GetClosestHue(double hue) const {
+ColorSchemeColor ClosestMapper::GetClosestColor(double hue) const {
     hue = fmod(hue, 360);
 
     double minDistance = 360;
-    double closestHue;
-    for (ColorSchemeColor color : colorScheme->GetColors()) {
+    ColorSchemeColor closestColor;
+    for (const auto &color : colorScheme->GetColors()) {
         double distance = std::min(std::abs(color.hue - hue), 360 - std::abs(color.hue - hue));
         if (distance < minDistance) {
             minDistance = distance;
-            closestHue = color.hue;
+            closestColor = color;
         }
     }
-    return closestHue;
+    return closestColor;
 }
 
 // ############################################################################################################
@@ -58,7 +58,7 @@ double ClosestMapper::GetClosestHue(double hue) const {
 
 Color ClosestMapperWithOffset::MapColor(Color color) {
     auto originalHSLColor = color.GetHSL();
-    double closestHue = GetClosestHue(originalHSLColor[0] + offset);
+    double closestHue = GetClosestColor(originalHSLColor[0] + offset).hue;
 
     Color closestColor;
     closestColor.SetHSL(closestHue, originalHSLColor[1], originalHSLColor[2]);

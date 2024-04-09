@@ -1,5 +1,6 @@
 #include "ColorScheme.h"
 #include "ColorSelector.h"
+#include "PlusAndMinusButtons.h"
 #include <gtkmm.h>
 #include <gtkmm/box.h>
 #include <gtkmm/button.h>
@@ -20,6 +21,11 @@ class PaletteSelection : public Gtk::Box {
 
     std::vector<ColorSelector> colorSelectors;
 
+    PlusAndMinusButtons plusAndMinusButtons;
+
+    ColorSchemeType colorSchemeType;
+    int numberOfColorsAnalogous = 5;
+    int numberOfColorsManual = 5;
     std::shared_ptr<ColorScheme> colorScheme;
 
     ColorSchemeChangedCallback callback;
@@ -38,4 +44,6 @@ private:
     void DrawColorSelectors();
 
     void OnColorChanged(int colorSelectorIndex);
+
+    void OnPlusOrMinusClicked(PlusAndMinusButtonsType type);
 };

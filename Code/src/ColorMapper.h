@@ -31,7 +31,7 @@ public:
     Color MapColor(Color color) override;
 
 protected:
-    double GetClosestHue(double hue) const;
+    ColorSchemeColor GetClosestColor(double hue) const;
 };
 
 class ClosestMapperWithOffset : public ClosestMapper {
