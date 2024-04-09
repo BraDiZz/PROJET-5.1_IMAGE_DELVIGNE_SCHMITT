@@ -2,9 +2,8 @@
 
 PaletteSelection::PaletteSelection(ColorSchemeChangedCallback callback) : callback(callback) {
     set_orientation(Gtk::ORIENTATION_VERTICAL);
-    separator.set_size_request(-1, 10);
+    colorBox.set_margin_top(10); // Set margin on the start side
     pack_start(buttonBox, Gtk::PACK_SHRINK, 0);
-    pack_start(separator, Gtk::PACK_SHRINK, 0);
     pack_start(colorBox, Gtk::PACK_SHRINK, 0);
 
     set_margin_start(10);  // Set margin on the start side
