@@ -63,6 +63,7 @@ void ColorSelector::OnHueScaleValueChanged() {
 void ColorSelector::OnSaturationScaleValueChanged() {
     saturation = saturationScale.get_value() / 100.0;
     UpdateFrameColor();
+    UpdateHueLabel();
     if (colorChangedCallback) {
         colorChangedCallback();
     }
@@ -79,5 +80,20 @@ void ColorSelector::UpdateHueScale() {
 }
 
 void ColorSelector::UpdateHueLabel() {
-    hueLabel.set_markup("<span font='20' weight='bold'>" + std::to_string(static_cast<int>(hue)) + "</span>");
+    std::string labelColor = GetLabelColor();
+    hueLabel.set_markup("<span font='20' weight='bold' foreground='" + labelColor + "'>" + std::to_string(static_cast<int>(hue)) + "</span>");
+}
+
+std::string ColorSelector::GetLabelColor() {
+    Gdk::RGBA color;
+    color.set_hsl(hue, saturation, 0.2);
+
+    int r = static_cast<int>(color.get_red_u() / 257);
+    int g = static_cast<int>(color.get_green_u() / 257);
+    int b = static_cast<int>(color.get_blue_u() / 257);
+
+    char hex_color[9];
+    sprintf(hex_color, "#%02X%02X%02X", r, g, b);
+
+    return std::string(hex_color);
 }

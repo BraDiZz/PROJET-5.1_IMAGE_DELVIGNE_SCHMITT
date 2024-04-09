@@ -39,4 +39,5 @@ private:
     void UpdateFrameColor();
     void UpdateHueScale();
     void UpdateHueLabel();
+    std::string GetLabelColor();
 };
