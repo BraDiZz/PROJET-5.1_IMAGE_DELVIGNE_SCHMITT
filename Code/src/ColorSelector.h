@@ -54,4 +54,10 @@ private:
     void UpdateHueScale();
     void UpdateHueLabel();
     std::string GetLabelColor();
+
+    void UpdateScaleColor();
+    void UpdateHueScaleColor();
+    void UpdateSaturationScaleColor();
+
+    std::ostringstream GetCssColorStream(double colorHue, double colorSaturation, double colorValue);
 };

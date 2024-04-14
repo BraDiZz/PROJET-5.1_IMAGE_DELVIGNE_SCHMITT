@@ -1,5 +1,6 @@
 #include "ColorSelector.h"
 #include <cmath>
+#include <gtkmm/cssprovider.h>
 
 ColorSelector::ColorSelector(double hue, double saturation) : saturationScale(Gtk::ORIENTATION_VERTICAL) {
     UpdateFrameColor();
@@ -16,6 +17,8 @@ ColorSelector::ColorSelector(double hue, double saturation) : saturationScale(Gt
     saturationScale.set_inverted(true);
     saturationScale.set_value(100);
     SetSaturation(saturation);
+
+    UpdateScaleColor();
 
     UpdateHueLabel();
     colorFrame.add(hueLabel);
@@ -37,6 +40,7 @@ void ColorSelector::SetHue(double hue) {
         UpdateHueScale();
         UpdateFrameColor();
         UpdateHueLabel();
+        UpdateScaleColor();
     }
 }
 
@@ -47,6 +51,7 @@ void ColorSelector::SetSaturation(double saturation) {
         this->saturation = newSaturation;
         saturationScale.set_value(saturation * 100);
         UpdateFrameColor();
+        UpdateScaleColor();
     }
 }
 
@@ -54,6 +59,7 @@ void ColorSelector::SetHueScaleMode(HueScaleMode hueScaleMode, int numberOfColor
     this->hueScaleMode = hueScaleMode;
     hueScale.set_visible(hueScaleMode != Disabled);
     UpdateHueScale();
+    UpdateHueScaleColor();
     if (hueScaleMode == HueDistance) {
         hueScale.set_range(1, 360 / numberOfColors);
     } else {
@@ -76,6 +82,7 @@ void ColorSelector::OnHueScaleValueChanged() {
         hue = hueScale.get_value();
         UpdateFrameColor();
         UpdateHueLabel();
+        UpdateScaleColor();
         if (!colorChangedCallback) {
             std::cout << "colorChangedCallback is null in OnHueScaleValueChanged" << std::endl;
             return;
@@ -95,6 +102,7 @@ void ColorSelector::OnSaturationScaleValueChanged() {
     saturation = saturationScale.get_value() / 100.0;
     UpdateFrameColor();
     UpdateHueLabel();
+    UpdateScaleColor();
     if (!colorChangedCallback) {
         std::cout << "colorChangedCallback is null in OnSaturationScaleValueChanged" << std::endl;
         return;
@@ -133,4 +141,68 @@ std::string ColorSelector::GetLabelColor() {
     sprintf(hex_color, "#%02X%02X%02X", r, g, b);
 
     return std::string(hex_color);
+}
+
+void ColorSelector::UpdateScaleColor() {
+    UpdateHueScaleColor();
+    UpdateSaturationScaleColor();
+}
+
+void ColorSelector::UpdateHueScaleColor() {
+    if (hueScaleMode == Disabled) {
+        return;
+    }
+    std::ostringstream fullCssColorStream = GetCssColorStream(hue, 1, 1);
+    std::ostringstream darkerCssColorStream = GetCssColorStream(hue, saturation, 0.8);
+    std::ostringstream darkCssColorStream = GetCssColorStream(hue, saturation, 0.5);
+
+    std::string cssStyle;
+
+    if (hueScaleMode == AbsoluteHue) {
+        // Create a CSS style string that changes the color of the slider (knob), the highlight, and the outline
+        cssStyle = "scale slider { background: " + fullCssColorStream.str() + "; }" +
+                   "scale trough { background: linear-gradient(to right, #ff0000 0%, #ffff00 16.67%, #00ff00 33.33%, #00ffff 50%, #0000ff 66.67%, #ff00ff 83.33%, #ff0000 100%); border-color: #343434; min-height: 5px;}" +
+                   "scale highlight { background: transparent; border-color: #343434;}";
+
+    } else {
+        cssStyle = "scale slider { background: " + fullCssColorStream.str() + "; }" +
+                   "scale trough { background: " + darkerCssColorStream.str() + "; border-color: #343434; min-height: 5px;}" +
+                   "scale highlight { background: transparent; border-color: #343434;}";
+    }
+    // Create a CSS provider
+    Glib::RefPtr<Gtk::CssProvider> cssProvider = Gtk::CssProvider::create();
+
+    // Load the CSS style string into the CSS provider
+    cssProvider->load_from_data(cssStyle);
+
+    // Apply the CSS provider to the scales only
+    hueScale.get_style_context()->add_provider(cssProvider, GTK_STYLE_PROVIDER_PRIORITY_USER);
+}
+
+void ColorSelector::UpdateSaturationScaleColor() {
+    std::ostringstream fullCssColorStream = GetCssColorStream(hue, saturation, 1);
+    std::ostringstream darkerCssColorStream = GetCssColorStream(hue, saturation, 0.8);
+    std::ostringstream darkCssColorStream = GetCssColorStream(hue, saturation, 0.5);
+
+    // Create a CSS style string that changes the color of the slider (knob), the highlight, and the outline
+    std::string cssStyle = "scale slider { background: " + fullCssColorStream.str() + "; border-color: " + darkCssColorStream.str() + "; }" +
+                           "scale highlight { background: linear-gradient(to top, white, " + darkerCssColorStream.str() + "); border-color: #343434; min-width: 5px; }" +
+                           "scale trough { border-color: #343434;}";
+
+    // Create a CSS provider
+    Glib::RefPtr<Gtk::CssProvider> cssProvider = Gtk::CssProvider::create();
+
+    // Load the CSS style string into the CSS provider
+    cssProvider->load_from_data(cssStyle);
+
+    // Apply the CSS provider to the scales only
+    saturationScale.get_style_context()->add_provider(cssProvider, GTK_STYLE_PROVIDER_PRIORITY_USER);
+}
+
+std::ostringstream ColorSelector::GetCssColorStream(double colorHue, double colorSaturation, double colorValue) {
+    Gdk::RGBA color;
+    color.set_hsv(colorHue, colorSaturation, colorValue);
+    std::ostringstream cssColorStream;
+    cssColorStream << "rgba(" << color.get_red() * 255 << ", " << color.get_green() * 255 << ", " << color.get_blue() * 255 << ", " << color.get_alpha() << ")";
+    return cssColorStream;
 }
