@@ -13,8 +13,10 @@ PaletteSelection::PaletteSelection(ColorSchemeChangedCallback callback) : plusAn
     set_margin_bottom(10); // Set margin on the bottom side
 
     InitializeButtons();
-    colorSelectors.emplace_back([this] { OnColorChanged(0); }, [this] { OnHueDistanceChanged(); }, 0, 1);
+    colorSelectors.emplace_back(0, 1);
     SetColorSchemeMode(ColorSchemeType::Monochrome);
+
+    plusAndMinusButtons.set_valign(Gtk::ALIGN_CENTER); // Center the plus and minus buttons vertically
 }
 
 void PaletteSelection::InitializeButtons() {
@@ -65,9 +67,10 @@ void PaletteSelection::RedrawColorSelectors() {
     DestroyColorSelectors();
 
     // Create new ColorSelectors
+    colorSelectors.reserve(colorScheme->GetNumberOfColors());
     auto colorSchemeColors = colorScheme->GetColors();
     for (int i = 0; i < colorScheme->GetNumberOfColors(); i++) {
-        colorSelectors.emplace_back([this, i] { OnColorChanged(i); }, [this] { OnHueDistanceChanged(); }, colorSchemeColors[i].hue, colorSchemeColors[i].saturation);
+        colorSelectors.emplace_back(colorSchemeColors[i].hue, colorSchemeColors[i].saturation);
         colorBox.pack_start(colorSelectors.back(), Gtk::PACK_SHRINK, 0);
     }
 
@@ -75,7 +78,10 @@ void PaletteSelection::RedrawColorSelectors() {
 
     if (colorSchemeType == ColorSchemeType::Analogous || colorSchemeType == ColorSchemeType::Manual) {
         colorBox.pack_start(plusAndMinusButtons, Gtk::PACK_SHRINK, 0);
-        plusAndMinusButtons.set_valign(Gtk::ALIGN_CENTER); // Center the plus and minus buttons vertically
+    }
+
+    for (int i = 0; i < colorScheme->GetNumberOfColors(); i++) {
+        colorSelectors[i].SetCallbacks([this, i] { OnColorChanged(i); }, [this] { OnHueDistanceChanged(); });
     }
 }
 

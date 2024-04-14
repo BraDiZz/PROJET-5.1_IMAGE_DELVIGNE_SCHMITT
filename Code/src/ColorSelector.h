@@ -4,6 +4,7 @@
 #include <gtkmm/grid.h>
 #include <gtkmm/scale.h>
 #include <gtkmm/spinbutton.h>
+#include <iostream>
 
 using ColorChangedCallback = std::function<void()>;
 using HueDistanceChangedCallback = std::function<void()>;
@@ -29,11 +30,12 @@ class ColorSelector : public Gtk::Grid {
 
     HueScaleMode hueScaleMode = AbsoluteHue;
 
-    ColorChangedCallback colorChangedCallback;
-    HueDistanceChangedCallback hueDistanceChangedCallback;
+    ColorChangedCallback colorChangedCallback = nullptr;
+    HueDistanceChangedCallback hueDistanceChangedCallback = nullptr;
 
 public:
-    ColorSelector(ColorChangedCallback colorChangedCallback, HueDistanceChangedCallback hueDistanceChangedCallback, double hue, double saturation);
+    ColorSelector(double hue, double saturation);
+
     void SetHue(double hue);
     double GetHue() const { return hue; }
     double GetHueDistance() const { return hueDistance; }
@@ -41,6 +43,8 @@ public:
     double GetSaturation() const { return saturation; }
 
     void SetHueScaleMode(HueScaleMode mode, int numberOfColorsinScheme = 0);
+
+    void SetCallbacks(const ColorChangedCallback& colorChangedCallback, const HueDistanceChangedCallback& hueDistanceChangedCallback);
 
 private:
     void OnHueScaleValueChanged();

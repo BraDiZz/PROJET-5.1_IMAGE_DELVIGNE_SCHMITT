@@ -1,8 +1,7 @@
 #include "ColorSelector.h"
 #include <cmath>
-#include <iostream>
 
-ColorSelector::ColorSelector(ColorChangedCallback callback, HueDistanceChangedCallback hueDistanceChangedCallback, double hue, double saturation) : saturationScale(Gtk::ORIENTATION_VERTICAL), colorChangedCallback(callback), hueDistanceChangedCallback(hueDistanceChangedCallback) {
+ColorSelector::ColorSelector(double hue, double saturation) : saturationScale(Gtk::ORIENTATION_VERTICAL) {
     UpdateFrameColor();
     colorFrame.set_size_request(frameWidth, frameHeight);
 
@@ -10,8 +9,6 @@ ColorSelector::ColorSelector(ColorChangedCallback callback, HueDistanceChangedCa
     hueScale.set_size_request(frameWidth, 20);
     hueScale.set_draw_value(false);
     SetHue(hue);
-    hueScale.signal_value_changed()
-        .connect(sigc::mem_fun(*this, &ColorSelector::OnHueScaleValueChanged));
 
     saturationScale.set_range(0, 100);
     saturationScale.set_size_request(20, frameHeight);
@@ -19,8 +16,6 @@ ColorSelector::ColorSelector(ColorChangedCallback callback, HueDistanceChangedCa
     saturationScale.set_inverted(true);
     saturationScale.set_value(100);
     SetSaturation(saturation);
-    saturationScale.signal_value_changed()
-        .connect(sigc::mem_fun(*this, &ColorSelector::OnSaturationScaleValueChanged));
 
     UpdateHueLabel();
     colorFrame.add(hueLabel);
@@ -66,15 +61,32 @@ void ColorSelector::SetHueScaleMode(HueScaleMode hueScaleMode, int numberOfColor
     }
 }
 
+void ColorSelector::SetCallbacks(const ColorChangedCallback& colorChangedCallback, const HueDistanceChangedCallback& hueDistanceChangedCallback) {
+    this->colorChangedCallback = colorChangedCallback;
+    this->hueDistanceChangedCallback = hueDistanceChangedCallback;
+
+    hueScale.signal_value_changed()
+        .connect(sigc::mem_fun(*this, &ColorSelector::OnHueScaleValueChanged));
+    saturationScale.signal_value_changed()
+        .connect(sigc::mem_fun(*this, &ColorSelector::OnSaturationScaleValueChanged));
+}
+
 void ColorSelector::OnHueScaleValueChanged() {
-    std::cout << "Hue scale value changed" << std::endl;
     if (hueScaleMode == AbsoluteHue) {
         hue = hueScale.get_value();
         UpdateFrameColor();
         UpdateHueLabel();
+        if (!colorChangedCallback) {
+            std::cout << "colorChangedCallback is null in OnHueScaleValueChanged" << std::endl;
+            return;
+        }
         colorChangedCallback();
     } else if (hueScaleMode == HueDistance) {
         hueDistance = hueScale.get_value();
+        if (!hueDistanceChangedCallback) {
+            std::cout << "hueDistanceChangedCallback is null in OnHueScaleValueChanged" << std::endl;
+            return;
+        }
         hueDistanceChangedCallback();
     }
 }
@@ -83,9 +95,11 @@ void ColorSelector::OnSaturationScaleValueChanged() {
     saturation = saturationScale.get_value() / 100.0;
     UpdateFrameColor();
     UpdateHueLabel();
-    if (colorChangedCallback) {
-        colorChangedCallback();
+    if (!colorChangedCallback) {
+        std::cout << "colorChangedCallback is null in OnSaturationScaleValueChanged" << std::endl;
+        return;
     }
+    colorChangedCallback();
 }
 
 void ColorSelector::UpdateFrameColor() {
