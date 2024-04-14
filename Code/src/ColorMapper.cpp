@@ -9,8 +9,7 @@
 // #                                                                                                          #
 // ############################################################################################################
 
-void ColorMapper::ConvertToColorScheme(ColorImage &image) {
-    std::cout << "Converting to color scheme" << std::endl;
+void ColorMapper::ConvertToColorScheme(ColorImage& image) {
     for (int x = 0; x < image.GetWidth(); x++) {
         for (int y = 0; y < image.GetHeight(); y++) {
             Color pixel = image.GetPixel(x, y);
@@ -40,7 +39,7 @@ ColorSchemeColor ClosestMapper::GetClosestColor(double hue) const {
 
     double minDistance = 360;
     ColorSchemeColor closestColor;
-    for (const auto &color : colorScheme->GetColors()) {
+    for (const auto& color : colorScheme->GetColors()) {
         double distance = std::min(std::abs(color.hue - hue), 360 - std::abs(color.hue - hue));
         if (distance < minDistance) {
             minDistance = distance;
@@ -71,7 +70,7 @@ Color ClosestMapperWithOffset::MapColor(Color color) {
 // #                                                                                                          #
 // ############################################################################################################
 
-HistogramMapper::HistogramMapper(std::shared_ptr<ColorScheme> colorScheme, const ColorImage &image) : ColorMapper(colorScheme) {
+HistogramMapper::HistogramMapper(std::shared_ptr<ColorScheme> colorScheme, const ColorImage& image) : ColorMapper(colorScheme) {
     std::vector<int> hueHistogram = GetHueHistogram(image);
     InitIntervals(hueHistogram);
     for (ColorInterval interval : intervals) {
@@ -91,7 +90,7 @@ Color HistogramMapper::MapColor(Color color) {
     return color;
 }
 
-std::vector<int> HistogramMapper::GetHueHistogram(const ColorImage &image) const {
+std::vector<int> HistogramMapper::GetHueHistogram(const ColorImage& image) const {
     std::vector<int> hueHistogram(360, 0);
     for (int x = 0; x < image.GetWidth(); x++) {
         for (int y = 0; y < image.GetHeight(); y++) {
@@ -104,7 +103,7 @@ std::vector<int> HistogramMapper::GetHueHistogram(const ColorImage &image) const
     return hueHistogram;
 }
 
-void HistogramMapper::InitIntervals(const std::vector<int> &hueHistogram) {
+void HistogramMapper::InitIntervals(const std::vector<int>& hueHistogram) {
     std::vector<int> centroids = GetInitialCentroids(colorScheme->GetNumberOfColors());
     std::vector<int> newCentroids(centroids.size(), 0);
 
@@ -134,7 +133,7 @@ std::vector<int> HistogramMapper::GetInitialCentroids(int k) const {
     return centroids;
 }
 
-std::vector<int> HistogramMapper::GetNewCentroids(const std::vector<int> &hueHistogram, const std::vector<int> &centroids) const {
+std::vector<int> HistogramMapper::GetNewCentroids(const std::vector<int>& hueHistogram, const std::vector<int>& centroids) const {
     std::vector<int> newCentroids(centroids.size(), 0);
     for (size_t i = 0; i < centroids.size(); i++) {
         int leftBorderOfCluster = GetLeftClusterBorder(centroids, i);
@@ -152,7 +151,7 @@ std::vector<int> HistogramMapper::GetNewCentroids(const std::vector<int> &hueHis
     return newCentroids;
 }
 
-int HistogramMapper::GetLeftClusterBorder(const std::vector<int> &centroids, size_t centroidIndex) const {
+int HistogramMapper::GetLeftClusterBorder(const std::vector<int>& centroids, size_t centroidIndex) const {
     if (centroidIndex != 0) {
         return std::ceil((centroids[centroidIndex - 1] + centroids[centroidIndex]) / 2);
     } else {
@@ -160,7 +159,7 @@ int HistogramMapper::GetLeftClusterBorder(const std::vector<int> &centroids, siz
     }
 }
 
-int HistogramMapper::GetRightClusterBorder(const std::vector<int> &centroids, size_t centroidIndex) const {
+int HistogramMapper::GetRightClusterBorder(const std::vector<int>& centroids, size_t centroidIndex) const {
     if (centroidIndex != centroids.size() - 1) {
         return std::floor((centroids[centroidIndex] + centroids[centroidIndex + 1]) / 2);
     } else {

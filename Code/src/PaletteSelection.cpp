@@ -61,6 +61,7 @@ void PaletteSelection::SetColorSchemeMode(ColorSchemeType mode) {
     }
 
     RedrawColorSelectors();
+    callback();
 }
 
 void PaletteSelection::RedrawColorSelectors() {
@@ -122,6 +123,7 @@ void PaletteSelection::OnHueDistanceChanged() {
     double hueDistance = colorSelectors[1].GetHueDistance();
     colorScheme = std::make_shared<AnalogousColorScheme>(colorSelectors[0].GetHue(), hueDistance, numberOfColorsAnalogous);
     UpdateColorSelectors();
+    callback();
 }
 
 void PaletteSelection::OnPlusOrMinusClicked(PlusAndMinusButtonsType type) {
@@ -143,4 +145,5 @@ void PaletteSelection::OnPlusOrMinusClicked(PlusAndMinusButtonsType type) {
     }
 
     SetColorSchemeMode(colorSchemeType);
+    callback();
 }
