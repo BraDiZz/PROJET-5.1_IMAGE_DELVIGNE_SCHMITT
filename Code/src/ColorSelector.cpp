@@ -46,9 +46,13 @@ void ColorSelector::SetSaturation(double saturation) {
     UpdateFrameColor();
 }
 
-void ColorSelector::SetHueScaleMode(HueScaleMode hueScaleMode) {
+void ColorSelector::SetHueScaleMode(HueScaleMode hueScaleMode, int numberOfColors) {
     this->hueScaleMode = hueScaleMode;
     hueScale.set_visible(hueScaleMode != Disabled);
+    if (hueScaleMode == HueDistance) {
+        hueScale.set_range(0, 360 / numberOfColors);
+        hueScale.set_value(hueDistance);
+    }
 }
 
 void ColorSelector::OnHueScaleValueChanged() {

@@ -40,7 +40,7 @@ public:
     void SetSaturation(double saturation);
     double GetSaturation() const { return saturation; }
 
-    void SetHueScaleMode(HueScaleMode mode);
+    void SetHueScaleMode(HueScaleMode mode, int numberOfColorsinScheme = 0);
 
 private:
     void OnHueScaleValueChanged();

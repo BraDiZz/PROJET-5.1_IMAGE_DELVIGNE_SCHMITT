@@ -73,7 +73,7 @@ void PaletteSelection::SetColorSchemeMode(ColorSchemeType mode) {
     }
 
     if (mode == ColorSchemeType::Analogous) {
-        colorSelectors[1].SetHueScaleMode(HueScaleMode::HueDistance);
+        colorSelectors[1].SetHueScaleMode(HueScaleMode::HueDistance, numberOfColorsAnalogous);
     }
 
     DrawColorSelectors();
