@@ -2,7 +2,7 @@
 #include <cmath>
 #include <iostream>
 
-ColorSelector::ColorSelector(ColorChangedCallback callback) : saturationScale(Gtk::ORIENTATION_VERTICAL), colorChangedCallback(callback) {
+ColorSelector::ColorSelector(ColorChangedCallback callback, HueDistanceChangedCallback hueDistanceChangedCallback) : saturationScale(Gtk::ORIENTATION_VERTICAL), colorChangedCallback(callback), hueDistanceChangedCallback(hueDistanceChangedCallback) {
     UpdateFrameColor();
     colorFrame.set_size_request(frameWidth, frameHeight);
 
@@ -46,17 +46,20 @@ void ColorSelector::SetSaturation(double saturation) {
     UpdateFrameColor();
 }
 
-void ColorSelector::SetShowHueScale(bool showHueScale) {
-    this->showHueScale = showHueScale;
-    hueScale.set_visible(showHueScale);
+void ColorSelector::SetHueScaleMode(HueScaleMode hueScaleMode) {
+    this->hueScaleMode = hueScaleMode;
+    hueScale.set_visible(hueScaleMode != Disabled);
 }
 
 void ColorSelector::OnHueScaleValueChanged() {
-    hue = hueScale.get_value();
-    UpdateFrameColor();
-    UpdateHueLabel();
-    if (colorChangedCallback) {
+    if (hueScaleMode == AbsoluteHue) {
+        hue = hueScale.get_value();
+        UpdateFrameColor();
+        UpdateHueLabel();
         colorChangedCallback();
+    } else if (hueScaleMode == HueDistance) {
+        hueDistance = hueScale.get_value();
+        hueDistanceChangedCallback();
     }
 }
 
@@ -76,7 +79,11 @@ void ColorSelector::UpdateFrameColor() {
 }
 
 void ColorSelector::UpdateHueScale() {
-    hueScale.set_value(hue);
+    if (hueScaleMode == AbsoluteHue) {
+        hueScale.set_value(hue);
+    } else if (hueScaleMode == HueDistance) {
+        hueScale.set_value(hueDistance);
+    }
 }
 
 void ColorSelector::UpdateHueLabel() {

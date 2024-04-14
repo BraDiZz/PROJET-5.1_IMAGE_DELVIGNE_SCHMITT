@@ -37,13 +37,14 @@ public:
 
 private:
     void InitializeButtons();
-    void InitializeButton(Gtk::Button &button, const std::string &label, ColorSchemeType mode);
+    void InitializeButton(Gtk::Button& button, const std::string& label, ColorSchemeType mode);
 
     void SetColorSchemeMode(ColorSchemeType mode);
 
     void DrawColorSelectors();
 
     void OnColorChanged(int colorSelectorIndex);
+    void OnHueDistanceChanged();
 
     void OnPlusOrMinusClicked(PlusAndMinusButtonsType type);
 };

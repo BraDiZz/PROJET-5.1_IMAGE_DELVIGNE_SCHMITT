@@ -13,7 +13,7 @@ PaletteSelection::PaletteSelection(ColorSchemeChangedCallback callback) : plusAn
     set_margin_bottom(10); // Set margin on the bottom side
 
     InitializeButtons();
-    colorSelectors.emplace_back([this] { OnColorChanged(0); });
+    colorSelectors.emplace_back([this] { OnColorChanged(0); }, [this] { OnHueDistanceChanged(); });
     SetColorSchemeMode(ColorSchemeType::Monochrome);
 }
 
@@ -25,7 +25,7 @@ void PaletteSelection::InitializeButtons() {
     InitializeButton(manualButton, "Manual", ColorSchemeType::Manual);
 }
 
-void PaletteSelection::InitializeButton(Gtk::Button &button, const std::string &label, ColorSchemeType mode) {
+void PaletteSelection::InitializeButton(Gtk::Button& button, const std::string& label, ColorSchemeType mode) {
     button.set_label(label);
     button.set_margin_start(5);
     button.set_margin_end(5);
@@ -60,16 +60,20 @@ void PaletteSelection::SetColorSchemeMode(ColorSchemeType mode) {
     colorSelectors.clear();
     auto colorSchemeColors = colorScheme->GetColors();
     for (int i = 0; i < colorScheme->GetNumberOfColors(); i++) {
-        colorSelectors.emplace_back([this, i] { OnColorChanged(i); });
+        colorSelectors.emplace_back([this, i] { OnColorChanged(i); }, [this] { OnHueDistanceChanged(); });
     }
 
     for (int i = 1; i < colorScheme->GetNumberOfColors(); i++) {
         if (mode != ColorSchemeType::Manual) {
-            colorSelectors[i].SetShowHueScale(false);
+            colorSelectors[i].SetHueScaleMode(HueScaleMode::Disabled);
         }
 
         colorSelectors.back().SetHue(colorSchemeColors[i].hue);
         colorSelectors.back().SetSaturation(colorSchemeColors[i].saturation);
+    }
+
+    if (mode == ColorSchemeType::Analogous) {
+        colorSelectors[1].SetHueScaleMode(HueScaleMode::HueDistance);
     }
 
     DrawColorSelectors();
@@ -77,7 +81,7 @@ void PaletteSelection::SetColorSchemeMode(ColorSchemeType mode) {
 
 void PaletteSelection::DrawColorSelectors() {
     colorBox.remove(plusAndMinusButtons);
-    for (auto &colorSelector : colorSelectors) {
+    for (auto& colorSelector : colorSelectors) {
         colorBox.pack_start(colorSelector, Gtk::PACK_SHRINK, 0);
     }
     if (colorSchemeType == ColorSchemeType::Analogous || colorSchemeType == ColorSchemeType::Manual) {
@@ -99,6 +103,16 @@ void PaletteSelection::OnColorChanged(int colorSelectorIndex) {
     callback();
 }
 
+void PaletteSelection::OnHueDistanceChanged() {
+    double hueDistance = colorSelectors[1].GetHueDistance();
+    colorScheme = std::make_shared<AnalogousColorScheme>(colorSelectors[0].GetHue(), hueDistance, numberOfColorsAnalogous);
+    auto colorSchemeColors = colorScheme->GetColors();
+    for (int i = 1; i < colorScheme->GetNumberOfColors(); i++) {
+        colorSelectors[i].SetHue(colorSchemeColors[i].hue);
+        colorSelectors[i].SetSaturation(colorSchemeColors[i].saturation);
+    }
+}
+
 void PaletteSelection::OnPlusOrMinusClicked(PlusAndMinusButtonsType type) {
     int addition = 0;
 
@@ -110,11 +124,11 @@ void PaletteSelection::OnPlusOrMinusClicked(PlusAndMinusButtonsType type) {
 
     if (colorSchemeType == ColorSchemeType::Analogous) {
         numberOfColorsAnalogous += addition;
-        numberOfColorsAnalogous = std::clamp(numberOfColorsAnalogous, 1, 7);
+        numberOfColorsAnalogous = std::clamp(numberOfColorsAnalogous, 2, 7);
     }
     if (colorSchemeType == ColorSchemeType::Manual) {
         numberOfColorsManual += addition;
-        numberOfColorsManual = std::clamp(numberOfColorsManual, 1, 7);
+        numberOfColorsManual = std::clamp(numberOfColorsManual, 2, 7);
     }
 
     SetColorSchemeMode(colorSchemeType);

@@ -11,5 +11,5 @@ PlusAndMinusButtons::PlusAndMinusButtons(ButtonsClickedCallback callback) : Gtk:
     show_all();
 
     set_margin_start(10);
-    set_margin_bottom(35);
+    set_margin_bottom(30);
 }
