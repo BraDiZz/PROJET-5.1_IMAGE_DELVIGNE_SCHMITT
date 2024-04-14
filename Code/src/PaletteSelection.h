@@ -41,7 +41,10 @@ private:
 
     void SetColorSchemeMode(ColorSchemeType mode);
 
-    void DrawColorSelectors();
+    void RedrawColorSelectors();
+    void DestroyColorSelectors();
+    void SetHueScaleModes();
+    void UpdateColorSelectors();
 
     void OnColorChanged(int colorSelectorIndex);
     void OnHueDistanceChanged();

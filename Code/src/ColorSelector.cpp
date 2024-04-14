@@ -2,13 +2,14 @@
 #include <cmath>
 #include <iostream>
 
-ColorSelector::ColorSelector(ColorChangedCallback callback, HueDistanceChangedCallback hueDistanceChangedCallback) : saturationScale(Gtk::ORIENTATION_VERTICAL), colorChangedCallback(callback), hueDistanceChangedCallback(hueDistanceChangedCallback) {
+ColorSelector::ColorSelector(ColorChangedCallback callback, HueDistanceChangedCallback hueDistanceChangedCallback, double hue, double saturation) : saturationScale(Gtk::ORIENTATION_VERTICAL), colorChangedCallback(callback), hueDistanceChangedCallback(hueDistanceChangedCallback) {
     UpdateFrameColor();
     colorFrame.set_size_request(frameWidth, frameHeight);
 
     hueScale.set_range(0, 360);
     hueScale.set_size_request(frameWidth, 20);
     hueScale.set_draw_value(false);
+    SetHue(hue);
     hueScale.signal_value_changed()
         .connect(sigc::mem_fun(*this, &ColorSelector::OnHueScaleValueChanged));
 
@@ -17,6 +18,7 @@ ColorSelector::ColorSelector(ColorChangedCallback callback, HueDistanceChangedCa
     saturationScale.set_draw_value(false);
     saturationScale.set_inverted(true);
     saturationScale.set_value(100);
+    SetSaturation(saturation);
     saturationScale.signal_value_changed()
         .connect(sigc::mem_fun(*this, &ColorSelector::OnSaturationScaleValueChanged));
 
@@ -31,31 +33,41 @@ ColorSelector::ColorSelector(ColorChangedCallback callback, HueDistanceChangedCa
 }
 
 void ColorSelector::SetHue(double hue) {
-    this->hue = fmod(hue, 360);
-    if (this->hue < 0) {
-        this->hue += 360;
+    double newHue = fmod(hue, 360);
+    if (newHue < 0) {
+        newHue += 360;
     }
-    UpdateHueScale();
-    UpdateFrameColor();
-    UpdateHueLabel();
+    if (newHue != this->hue) {
+        this->hue = newHue;
+        UpdateHueScale();
+        UpdateFrameColor();
+        UpdateHueLabel();
+    }
 }
 
 void ColorSelector::SetSaturation(double saturation) {
-    this->saturation = std::clamp(saturation, 0.0, 1.0);
-    saturationScale.set_value(saturation * 100);
-    UpdateFrameColor();
+    double newSaturation = std::clamp(saturation, 0.0, 1.0);
+
+    if (this->saturation != newSaturation) {
+        this->saturation = newSaturation;
+        saturationScale.set_value(saturation * 100);
+        UpdateFrameColor();
+    }
 }
 
 void ColorSelector::SetHueScaleMode(HueScaleMode hueScaleMode, int numberOfColors) {
     this->hueScaleMode = hueScaleMode;
     hueScale.set_visible(hueScaleMode != Disabled);
+    UpdateHueScale();
     if (hueScaleMode == HueDistance) {
-        hueScale.set_range(0, 360 / numberOfColors);
-        hueScale.set_value(hueDistance);
+        hueScale.set_range(1, 360 / numberOfColors);
+    } else {
+        hueScale.set_range(0, 360);
     }
 }
 
 void ColorSelector::OnHueScaleValueChanged() {
+    std::cout << "Hue scale value changed" << std::endl;
     if (hueScaleMode == AbsoluteHue) {
         hue = hueScale.get_value();
         UpdateFrameColor();
@@ -92,7 +104,7 @@ void ColorSelector::UpdateHueScale() {
 
 void ColorSelector::UpdateHueLabel() {
     std::string labelColor = GetLabelColor();
-    hueLabel.set_markup("<span font='20' weight='bold' foreground='" + labelColor + "'>" + std::to_string(static_cast<int>(hue)) + "</span>");
+    hueLabel.set_markup("<span font='25' weight='bold' foreground='" + labelColor + "'>" + std::to_string(static_cast<int>(hue)) + "</span>");
 }
 
 std::string ColorSelector::GetLabelColor() {

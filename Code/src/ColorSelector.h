@@ -33,7 +33,7 @@ class ColorSelector : public Gtk::Grid {
     HueDistanceChangedCallback hueDistanceChangedCallback;
 
 public:
-    ColorSelector(ColorChangedCallback colorChangedCallback, HueDistanceChangedCallback hueDistanceChangedCallback);
+    ColorSelector(ColorChangedCallback colorChangedCallback, HueDistanceChangedCallback hueDistanceChangedCallback, double hue, double saturation);
     void SetHue(double hue);
     double GetHue() const { return hue; }
     double GetHueDistance() const { return hueDistance; }

@@ -38,12 +38,12 @@ public:
 
 struct MonochromeColorScheme : public ColorScheme {
 public:
-    MonochromeColorScheme(double hue) : ColorScheme({hue}) {}
+    MonochromeColorScheme(double hue) : ColorScheme({ColorSchemeColor(hue)}) {}
 };
 
 struct ComplementaryColorScheme : public ColorScheme {
 public:
-    ComplementaryColorScheme(double hue) : ColorScheme({hue, hue + 180}) {}
+    ComplementaryColorScheme(double hue) : ColorScheme({ColorSchemeColor(hue), ColorSchemeColor(hue + 180)}) {}
 
     void SetColor(int index, double hue, double saturation) override {
         if (index == 0) {

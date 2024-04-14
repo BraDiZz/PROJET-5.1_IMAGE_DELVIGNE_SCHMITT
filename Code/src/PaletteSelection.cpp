@@ -13,7 +13,7 @@ PaletteSelection::PaletteSelection(ColorSchemeChangedCallback callback) : plusAn
     set_margin_bottom(10); // Set margin on the bottom side
 
     InitializeButtons();
-    colorSelectors.emplace_back([this] { OnColorChanged(0); }, [this] { OnHueDistanceChanged(); });
+    colorSelectors.emplace_back([this] { OnColorChanged(0); }, [this] { OnHueDistanceChanged(); }, 0, 1);
     SetColorSchemeMode(ColorSchemeType::Monochrome);
 }
 
@@ -46,71 +46,76 @@ void PaletteSelection::SetColorSchemeMode(ColorSchemeType mode) {
         colorScheme = std::make_shared<TriadicColorScheme>(colorSelectors[0].GetHue());
         break;
     case ColorSchemeType::Analogous:
-        colorScheme = std::make_shared<AnalogousColorScheme>(colorSelectors[0].GetHue(), 20, numberOfColorsAnalogous);
+        colorScheme = std::make_shared<AnalogousColorScheme>(colorSelectors[0].GetHue(), 10, numberOfColorsAnalogous);
         break;
     case ColorSchemeType::Manual:
         std::vector<ColorSchemeColor> colors;
         for (int i = 0; i < numberOfColorsManual; i++) {
-            colors.emplace_back(colorSelectors[0].GetHue() + i * 10, colorSelectors[0].GetSaturation());
+            double randomHue = rand() % 360;
+            colors.emplace_back(randomHue, 1);
         }
         colorScheme = std::make_shared<ColorScheme>(colors);
         break;
     }
 
-    colorSelectors.clear();
-    auto colorSchemeColors = colorScheme->GetColors();
-    for (int i = 0; i < colorScheme->GetNumberOfColors(); i++) {
-        colorSelectors.emplace_back([this, i] { OnColorChanged(i); }, [this] { OnHueDistanceChanged(); });
-    }
-
-    for (int i = 1; i < colorScheme->GetNumberOfColors(); i++) {
-        if (mode != ColorSchemeType::Manual) {
-            colorSelectors[i].SetHueScaleMode(HueScaleMode::Disabled);
-        }
-
-        colorSelectors.back().SetHue(colorSchemeColors[i].hue);
-        colorSelectors.back().SetSaturation(colorSchemeColors[i].saturation);
-    }
-
-    if (mode == ColorSchemeType::Analogous) {
-        colorSelectors[1].SetHueScaleMode(HueScaleMode::HueDistance, numberOfColorsAnalogous);
-    }
-
-    DrawColorSelectors();
+    RedrawColorSelectors();
 }
 
-void PaletteSelection::DrawColorSelectors() {
-    colorBox.remove(plusAndMinusButtons);
-    for (auto& colorSelector : colorSelectors) {
-        colorBox.pack_start(colorSelector, Gtk::PACK_SHRINK, 0);
+void PaletteSelection::RedrawColorSelectors() {
+    DestroyColorSelectors();
+
+    // Create new ColorSelectors
+    auto colorSchemeColors = colorScheme->GetColors();
+    for (int i = 0; i < colorScheme->GetNumberOfColors(); i++) {
+        colorSelectors.emplace_back([this, i] { OnColorChanged(i); }, [this] { OnHueDistanceChanged(); }, colorSchemeColors[i].hue, colorSchemeColors[i].saturation);
+        colorBox.pack_start(colorSelectors.back(), Gtk::PACK_SHRINK, 0);
     }
+
+    SetHueScaleModes();
+
     if (colorSchemeType == ColorSchemeType::Analogous || colorSchemeType == ColorSchemeType::Manual) {
         colorBox.pack_start(plusAndMinusButtons, Gtk::PACK_SHRINK, 0);
         plusAndMinusButtons.set_valign(Gtk::ALIGN_CENTER); // Center the plus and minus buttons vertically
     }
 }
 
-void PaletteSelection::OnColorChanged(int colorSelectorIndex) {
-    colorScheme->SetColor(colorSelectorIndex, colorSelectors[colorSelectorIndex].GetHue(), colorSelectors[colorSelectorIndex].GetSaturation());
-    for (int i = 0; i < colorScheme->GetNumberOfColors(); i++) {
-        if (colorSelectors[i].GetHue() != colorScheme->GetColors()[i].hue) {
-            colorSelectors[i].SetHue(colorScheme->GetColors()[i].hue);
-        }
-        if (colorSelectors[i].GetSaturation() != colorScheme->GetColors()[i].saturation) {
-            colorSelectors[i].SetSaturation(colorScheme->GetColors()[i].saturation);
+void PaletteSelection::DestroyColorSelectors() {
+    for (auto& colorSelector : colorSelectors) {
+        colorBox.remove(colorSelector);
+    }
+    colorSelectors.clear();
+    colorBox.remove(plusAndMinusButtons);
+}
+
+void PaletteSelection::SetHueScaleModes() {
+    if (colorSchemeType != ColorSchemeType::Manual) {
+        for (int i = 1; i < colorScheme->GetNumberOfColors(); i++) {
+            colorSelectors[i].SetHueScaleMode(HueScaleMode::Disabled);
         }
     }
+
+    if (colorSchemeType == ColorSchemeType::Analogous) {
+        colorSelectors[1].SetHueScaleMode(HueScaleMode::HueDistance, numberOfColorsAnalogous);
+    }
+}
+
+void PaletteSelection::UpdateColorSelectors() {
+    for (size_t i = 0; i < colorSelectors.size(); i++) {
+        colorSelectors[i].SetHue(colorScheme->GetColors()[i].hue);
+        colorSelectors[i].SetSaturation(colorScheme->GetColors()[i].saturation);
+    }
+}
+
+void PaletteSelection::OnColorChanged(int colorSelectorIndex) {
+    colorScheme->SetColor(colorSelectorIndex, colorSelectors[colorSelectorIndex].GetHue(), colorSelectors[colorSelectorIndex].GetSaturation());
+    UpdateColorSelectors();
     callback();
 }
 
 void PaletteSelection::OnHueDistanceChanged() {
     double hueDistance = colorSelectors[1].GetHueDistance();
     colorScheme = std::make_shared<AnalogousColorScheme>(colorSelectors[0].GetHue(), hueDistance, numberOfColorsAnalogous);
-    auto colorSchemeColors = colorScheme->GetColors();
-    for (int i = 1; i < colorScheme->GetNumberOfColors(); i++) {
-        colorSelectors[i].SetHue(colorSchemeColors[i].hue);
-        colorSelectors[i].SetSaturation(colorSchemeColors[i].saturation);
-    }
+    UpdateColorSelectors();
 }
 
 void PaletteSelection::OnPlusOrMinusClicked(PlusAndMinusButtonsType type) {
