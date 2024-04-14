@@ -1,6 +1,6 @@
 #pragma once
 #include <functional>
-#include <gtkmm/frame.h>
+#include <gtkmm/eventbox.h>
 #include <gtkmm/grid.h>
 #include <gtkmm/scale.h>
 #include <gtkmm/spinbutton.h>
@@ -23,7 +23,7 @@ class ColorSelector : public Gtk::Grid {
     double hueDistance = 10;
     double saturation = 1;
 
-    Gtk::Frame colorFrame;
+    Gtk::EventBox colorFrame;
     Gtk::Scale hueScale;
     Gtk::Scale saturationScale;
     Gtk::Label hueLabel;

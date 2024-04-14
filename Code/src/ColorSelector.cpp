@@ -5,6 +5,9 @@
 ColorSelector::ColorSelector(double hue, double saturation) : saturationScale(Gtk::ORIENTATION_VERTICAL) {
     UpdateFrameColor();
     colorFrame.set_size_request(frameWidth, frameHeight);
+    Glib::RefPtr<Gtk::CssProvider> cssProvider = Gtk::CssProvider::create();
+    cssProvider->load_from_data("* { border-radius: 10px;}");
+    colorFrame.get_style_context()->add_provider(cssProvider, GTK_STYLE_PROVIDER_PRIORITY_USER);
 
     hueScale.set_range(0, 360);
     hueScale.set_size_request(frameWidth, 20);
