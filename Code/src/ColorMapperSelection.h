@@ -7,8 +7,11 @@
 #include <gtkmm/grid.h>
 #include <gtkmm/scale.h>
 
+using ColorMapperChangedCallback = std::function<void()>;
+
 class ColorMapperSelection : public Gtk::Grid {
-    std::shared_ptr<ColorMapper> mapper = std::make_shared<ClosestMapper>();
+    std::shared_ptr<ColorMapper> mapper;
+    ColorMapperType mapperType = ColorMapperType::Closest;
 
     Gtk::Button closestButton;
     Gtk::Button closestOffsetButton;
@@ -16,8 +19,10 @@ class ColorMapperSelection : public Gtk::Grid {
 
     Gtk::Scale offsetScale;
 
+    ColorMapperChangedCallback callback;
+
 public:
-    ColorMapperSelection();
+    ColorMapperSelection(ColorMapperChangedCallback callback);
 
     std::shared_ptr<ColorMapper> GetColorMapper() const {
         return mapper;
@@ -26,4 +31,7 @@ public:
 private:
     void InitializeButton(Gtk::Button& button, const std::string& label, ColorMapperType mode);
     void OnButtonClicked(ColorMapperType mode);
+    void OnScaleChanged();
+
+    void UpdateColorMapper();
 };

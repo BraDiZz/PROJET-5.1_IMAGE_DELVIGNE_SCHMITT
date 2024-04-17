@@ -110,10 +110,14 @@ void HistogramMapper::InitIntervals(const std::vector<int>& hueHistogram) {
     std::vector<int> newCentroids(centroids.size(), 0);
 
     int iterations = 0;
-    while (centroids != newCentroids) {
+    while (centroids != newCentroids && iterations < 100) {
+        std::cout << "Iteration " << iterations << std::endl;
         iterations++;
         centroids = newCentroids;
         newCentroids = GetNewCentroids(hueHistogram, centroids);
+        for (size_t i = 0; i < centroids.size(); i++) {
+            std::cout << centroids[i] << " ";
+        }
     }
     std::cout << "Converged after " << iterations << " iterations" << std::endl;
     for (size_t i = 0; i < centroids.size(); i++) {
@@ -148,7 +152,11 @@ std::vector<int> HistogramMapper::GetNewCentroids(const std::vector<int>& hueHis
         }
         sum += hueHistogram[rightBorderOfCluster] * rightBorderOfCluster;
         count += hueHistogram[rightBorderOfCluster];
-        newCentroids[i] = sum / count;
+        if (count != 0) {
+            newCentroids[i] = sum / count;
+        } else {
+            newCentroids[i] = std::rand() % 255; // or some other value that makes sense in your context
+        }
     }
     return newCentroids;
 }

@@ -5,9 +5,12 @@
 #include <stdlib.h>
 #include <string>
 
-MainPalette::MainPalette() : mainBox(Gtk::ORIENTATION_VERTICAL), paletteSelection([&]() { UpdateColorScheme(); }), colorMapperSelection(), imageBox(Gtk::ORIENTATION_HORIZONTAL), saveBox(Gtk::ORIENTATION_HORIZONTAL) {
+MainPalette::MainPalette() : mainBox(Gtk::ORIENTATION_VERTICAL),
+                             paletteSelection([&]() { UpdateColorScheme(); }),
+                             colorMapperSelection([&]() { UpdateColorScheme(); }),
+                             imageBox(Gtk::ORIENTATION_HORIZONTAL),
+                             saveBox(Gtk::ORIENTATION_HORIZONTAL) {
     set_title("Application Graphique Armonie de Couleur");
-    set_default_size(1000, 680);
 
     mainBox.pack_start(fileSelectionBox, Gtk::PACK_SHRINK, 0);
     mainBox.pack_start(paletteSelection, Gtk::PACK_SHRINK, 0);
@@ -18,11 +21,9 @@ MainPalette::MainPalette() : mainBox(Gtk::ORIENTATION_VERTICAL), paletteSelectio
 
     Entry_Image_Out.set_text("Nom_de_l'image");
 
-    std::cout << "MainPalette" << std::endl;
-
     Glib::RefPtr<Gdk::Pixbuf> pixbuf = Gdk::Pixbuf::create_from_file("Images/white.png");
     Glib::RefPtr<Gdk::Pixbuf> pixbuf2 = Gdk::Pixbuf::create_from_file("Images/white.png");
-    std::cout << "MainPalette2" << std::endl;
+
     ImageIn.set(pixbuf);
     ImageIn.set_margin_start(10);
     ImageIn.set_margin_end(5);
@@ -98,6 +99,11 @@ void MainPalette::LoadImage() {
             std::cout << filename << " n'est pas un fichier valide" << std::endl;
         }
     }
+    // Resize the window to fit the content
+    set_default_size(-1, -1);
+    set_resizable(false);
+    set_size_request(-1, -1);
+    UpdateColorScheme();
 }
 
 void MainPalette::SaveImage() {
@@ -126,7 +132,6 @@ void MainPalette::SaveImage() {
 }
 
 void MainPalette::UpdateColorScheme() {
-    std::cout << "Image Path: " << image_path << std::endl;
     if (!image_path.empty()) {
         ColorImage img(image_path);
         std::shared_ptr<ColorMapper> mapper = colorMapperSelection.GetColorMapper();
