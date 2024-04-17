@@ -10,7 +10,8 @@
 
 using ColorSchemeChangedCallback = std::function<void()>;
 
-class PaletteSelection : public Gtk::Box {
+class PaletteSelection : public Gtk::Frame {
+    Gtk::Box mainBox;
     Gtk::Box buttonBox;
     Gtk::Box colorBox;
 

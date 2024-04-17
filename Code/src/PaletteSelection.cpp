@@ -1,15 +1,24 @@
 #include "PaletteSelection.h"
 
 PaletteSelection::PaletteSelection(ColorSchemeChangedCallback callback) : plusAndMinusButtons([this](PlusAndMinusButtonsType type) { OnPlusOrMinusClicked(type); }), callback(callback) {
-    set_orientation(Gtk::ORIENTATION_VERTICAL);
+    Glib::RefPtr<Gtk::CssProvider> cssProvider = Gtk::CssProvider::create();
+    cssProvider->load_from_data("* { border-radius: 10px;}");
+    get_style_context()->add_provider(cssProvider, GTK_STYLE_PROVIDER_PRIORITY_USER);
+    set_margin_bottom(5); // Set margin on the bottom side
+    set_margin_start(10); // Set margin on the start side
+    set_margin_end(10);   // Set margin on the end side
+    set_label("Color Palette");
+
+    mainBox.set_orientation(Gtk::ORIENTATION_VERTICAL);
     colorBox.set_margin_top(10); // Set margin on the start side
     colorBox.set_valign(Gtk::ALIGN_CENTER);
-    pack_start(buttonBox, Gtk::PACK_SHRINK, 0);
-    pack_start(colorBox, Gtk::PACK_SHRINK, 0);
+    mainBox.pack_start(buttonBox, Gtk::PACK_SHRINK, 0);
+    mainBox.pack_start(colorBox, Gtk::PACK_SHRINK, 0);
+    add(mainBox);
 
-    set_margin_start(5); // Set margin on the start side
-    set_margin_end(5);   // Set margin on the end side
-    set_margin_top(5);   // Set margin on the top side
+    mainBox.set_margin_start(5); // Set margin on the start side
+    mainBox.set_margin_end(5);   // Set margin on the end side
+    mainBox.set_margin_top(5);   // Set margin on the top side
 
     InitializeButtons();
     colorSelectors.emplace_back(0, 1);
@@ -23,7 +32,7 @@ void PaletteSelection::InitializeButtons() {
     InitializeButton(complementaryButton, "Complementary", ColorSchemeType::Complementary);
     InitializeButton(triadicButton, "Triadic", ColorSchemeType::Triadic);
     InitializeButton(analogousButton, "Analogous", ColorSchemeType::Analogous);
-    InitializeButton(manualButton, "Manual", ColorSchemeType::Manual);
+    InitializeButton(manualButton, "Free", ColorSchemeType::Manual);
 }
 
 void PaletteSelection::InitializeButton(Gtk::Button& button, const std::string& label, ColorSchemeType mode) {

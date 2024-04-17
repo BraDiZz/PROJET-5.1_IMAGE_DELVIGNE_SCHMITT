@@ -8,7 +8,7 @@ ColorMapperSelection::ColorMapperSelection(ColorMapperChangedCallback callback) 
     dropDownText.append("Closest with offset");
     dropDownText.append("Histogram");
     dropDownText.set_active(0);
-    dropDownText.set_margin_start(5);
+    dropDownText.set_margin_start(10);
     dropDownText.set_margin_end(10);
     dropDownText.signal_changed().connect(sigc::mem_fun(*this, &ColorMapperSelection::OnDropdownChanged));
 
