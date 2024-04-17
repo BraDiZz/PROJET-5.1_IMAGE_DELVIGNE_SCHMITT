@@ -3,10 +3,11 @@
 
 #include <memory>
 
+#include <gtkmm/comboboxtext.h>
 #include <gtkmm/frame.h>
-#include <gtkmm/button.h>
 #include <gtkmm/grid.h>
 #include <gtkmm/scale.h>
+#include <gtkmm/checkbutton.h>
 
 using ColorMapperChangedCallback = std::function<void()>;
 
@@ -16,10 +17,8 @@ class ColorMapperSelection : public Gtk::Frame {
     std::shared_ptr<ColorMapper> mapper;
     ColorMapperType mapperType = ColorMapperType::Closest;
 
-    Gtk::Button closestButton;
-    Gtk::Button closestOffsetButton;
-    Gtk::Button histogramButton;
-
+    Gtk::ComboBoxText dropDownText;
+    Gtk::CheckButton useSaturationButton;
     Gtk::Scale offsetScale;
 
     ColorMapperChangedCallback callback;
@@ -32,9 +31,9 @@ public:
     }
 
 private:
-    void InitializeButton(Gtk::Button& button, const std::string& label, ColorMapperType mode);
-    void OnButtonClicked(ColorMapperType mode);
+    void OnDropdownChanged();
     void OnScaleChanged();
 
     void UpdateColorMapper();
+    void UpdateOptions();
 };

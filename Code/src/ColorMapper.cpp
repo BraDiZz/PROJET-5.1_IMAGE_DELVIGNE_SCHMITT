@@ -21,17 +21,21 @@ void ColorMapper::ConvertToColorScheme(ColorImage& image) {
 
 // ############################################################################################################
 // #                                                                                                          #
-// #                                                ClosestMapper                                              #
+// #                                        ClosestMapper                                                     #
 // #                                                                                                          #
 // ############################################################################################################
 
 Color ClosestMapper::MapColor(Color color) {
     auto originalHSLColor = color.GetHSL();
-    auto closest = GetClosestColor(originalHSLColor[0]);
+    auto closestColor = GetClosestColor(originalHSLColor[0] + offset);
 
-    Color closestColor;
-    closestColor.SetHSL(closest.hue, originalHSLColor[1], originalHSLColor[2]);
-    return closestColor;
+    Color newColor;
+    if (!useSaturation) {
+        newColor.SetHSL(closestColor.hue, originalHSLColor[1], originalHSLColor[2]);
+    } else {
+        newColor.SetHSL(closestColor.hue, closestColor.saturation, originalHSLColor[2]);
+    }
+    return newColor;
 }
 
 ColorSchemeColor ClosestMapper::GetClosestColor(double hue) const {
@@ -48,22 +52,6 @@ ColorSchemeColor ClosestMapper::GetClosestColor(double hue) const {
     }
     return closestColor;
 }
-
-// ############################################################################################################
-// #                                                                                                          #
-// #                                        ClosestMapperWithOffset                                           #
-// #                                                                                                          #
-// ############################################################################################################
-
-Color ClosestMapperWithOffset::MapColor(Color color) {
-    auto originalHSLColor = color.GetHSL();
-    double closestHue = GetClosestColor(originalHSLColor[0] + offset).hue;
-
-    Color closestColor;
-    closestColor.SetHSL(closestHue, originalHSLColor[1], originalHSLColor[2]);
-    return closestColor;
-}
-
 // ############################################################################################################
 // #                                                                                                          #
 // #                                              HistogramMapper                                             #
@@ -73,9 +61,6 @@ Color ClosestMapperWithOffset::MapColor(Color color) {
 void HistogramMapper::SetImage(const ColorImage& image) {
     std::vector<int> hueHistogram = GetHueHistogram(image);
     InitIntervals(hueHistogram);
-    for (ColorInterval interval : intervals) {
-        printf("Interval: %f - %f -> %f\n", interval.start, interval.end, interval.hue);
-    }
 }
 
 Color HistogramMapper::MapColor(Color color) {
@@ -83,7 +68,11 @@ Color HistogramMapper::MapColor(Color color) {
     for (ColorInterval interval : intervals) {
         if (interval.Contains(originalHSLColor[0])) {
             Color newColor;
-            newColor.SetHSL(interval.hue, originalHSLColor[1], originalHSLColor[2]);
+            if (useSaturation)
+                newColor.SetHSL(interval.color.hue, interval.color.saturation, originalHSLColor[2]);
+            else
+                newColor.SetHSL(interval.color.hue, originalHSLColor[1], originalHSLColor[2]);
+
             return newColor;
         }
     }
@@ -111,20 +100,16 @@ void HistogramMapper::InitIntervals(const std::vector<int>& hueHistogram) {
 
     int iterations = 0;
     while (centroids != newCentroids && iterations < 100) {
-        std::cout << "Iteration " << iterations << std::endl;
         iterations++;
         centroids = newCentroids;
         newCentroids = GetNewCentroids(hueHistogram, centroids);
-        for (size_t i = 0; i < centroids.size(); i++) {
-            std::cout << centroids[i] << " ";
-        }
     }
     std::cout << "Converged after " << iterations << " iterations" << std::endl;
     for (size_t i = 0; i < centroids.size(); i++) {
         ColorInterval interval;
         interval.start = GetLeftClusterBorder(centroids, i);
         interval.end = GetRightClusterBorder(centroids, i);
-        interval.hue = colorScheme->GetColors()[i].hue;
+        interval.color = colorScheme->GetColors()[i];
         intervals.push_back(interval);
     }
 }

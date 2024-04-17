@@ -15,8 +15,9 @@ enum struct ColorMapperType {
 class ColorMapper {
 protected:
     std::shared_ptr<ColorScheme> colorScheme;
+    bool useSaturation;
 
-    ColorMapper() {}
+    ColorMapper(bool useSaturation) : useSaturation(useSaturation) {}
 
 public:
     void ConvertToColorScheme(ColorImage& image);
@@ -28,8 +29,10 @@ protected:
 };
 
 class ClosestMapper : public ColorMapper {
+    double offset;
+
 public:
-    ClosestMapper() = default;
+    ClosestMapper(bool useSaturation, double offset = 0) : ColorMapper(useSaturation), offset(offset) {}
 
     Color MapColor(Color color) override;
 
@@ -37,20 +40,11 @@ protected:
     ColorSchemeColor GetClosestColor(double hue) const;
 };
 
-class ClosestMapperWithOffset : public ClosestMapper {
-    double offset;
-
-public:
-    ClosestMapperWithOffset(double offset) : offset(offset) {}
-
-    Color MapColor(Color color) override;
-};
-
 struct ColorInterval {
     // Map the hues from start to end to hue
     double start;
     double end;
-    double hue;
+    ColorSchemeColor color;
 
     bool Contains(double hue) const {
         if (start < end)
@@ -64,7 +58,7 @@ class HistogramMapper : public ColorMapper {
     std::vector<ColorInterval> intervals{};
 
 public:
-    HistogramMapper() = default;
+    HistogramMapper(bool useSaturation) : ColorMapper(useSaturation) {}
 
     void SetImage(const ColorImage& image) override;
 

@@ -1,20 +1,27 @@
 #include "ColorMapperSelection.h"
 #include <gtkmm/cssprovider.h>
+#include <gtkmm/liststore.h>
 #include <gtkmm/stylecontext.h>
 
 ColorMapperSelection::ColorMapperSelection(ColorMapperChangedCallback callback) : callback(callback) {
-    InitializeButton(closestButton, "Closest", ColorMapperType::Closest);
-    InitializeButton(closestOffsetButton, "Closest with offset", ColorMapperType::ClosestWithOffset);
-    InitializeButton(histogramButton, "Histogram", ColorMapperType::Histogram);
+    dropDownText.append("Closest");
+    dropDownText.append("Closest with offset");
+    dropDownText.append("Histogram");
+    dropDownText.set_active(0);
+    dropDownText.set_margin_start(5);
+    dropDownText.set_margin_end(10);
+    dropDownText.signal_changed().connect(sigc::mem_fun(*this, &ColorMapperSelection::OnDropdownChanged));
 
-    grid.attach(closestButton, 0, 0, 1, 1);
-    grid.attach(closestOffsetButton, 1, 0, 1, 1);
-    grid.attach(histogramButton, 2, 0, 1, 1);
+    grid.attach(dropDownText, 0, 0, 1, 1);
 
+    useSaturationButton.set_label("Use Saturation");
+    useSaturationButton.signal_toggled().connect(sigc::mem_fun(*this, &ColorMapperSelection::UpdateColorMapper));
+    grid.attach(useSaturationButton, 1, 0, 1, 1);
+
+    offsetScale.set_size_request(200, 20);
     offsetScale.set_range(0, 360);
     offsetScale.set_value(90);
     offsetScale.signal_value_changed().connect(sigc::mem_fun(*this, &ColorMapperSelection::OnScaleChanged));
-    grid.attach(offsetScale, 1, 1, 1, 1);
 
     set_label("Color Mapper");
     set_margin_start(10);  // Set margin on the start side
@@ -33,15 +40,11 @@ ColorMapperSelection::ColorMapperSelection(ColorMapperChangedCallback callback) 
     show_all();
 }
 
-void ColorMapperSelection::InitializeButton(Gtk::Button& button, const std::string& label, ColorMapperType mode) {
-    button.set_label(label);
-    button.set_margin_start(5);
-    button.set_margin_end(5);
-    button.signal_clicked().connect(sigc::bind(sigc::mem_fun(*this, &ColorMapperSelection::OnButtonClicked), mode));
-}
-
-void ColorMapperSelection::OnButtonClicked(ColorMapperType mode) {
-    mapperType = mode;
+void ColorMapperSelection::OnDropdownChanged() {
+    mapperType = dropDownText.get_active_row_number() == 0   ? ColorMapperType::Closest
+                 : dropDownText.get_active_row_number() == 1 ? ColorMapperType::ClosestWithOffset
+                                                             : ColorMapperType::Histogram;
+    UpdateOptions();
     UpdateColorMapper();
 }
 
@@ -52,14 +55,24 @@ void ColorMapperSelection::OnScaleChanged() {
 void ColorMapperSelection::UpdateColorMapper() {
     switch (mapperType) {
     case ColorMapperType::Closest:
-        mapper = std::make_shared<ClosestMapper>();
+        mapper = std::make_shared<ClosestMapper>(useSaturationButton.get_active());
         break;
     case ColorMapperType::ClosestWithOffset:
-        mapper = std::make_shared<ClosestMapperWithOffset>(offsetScale.get_value());
+        mapper = std::make_shared<ClosestMapper>(useSaturationButton.get_active(), offsetScale.get_value());
         break;
     case ColorMapperType::Histogram:
-        mapper = std::make_shared<HistogramMapper>();
+        mapper = std::make_shared<HistogramMapper>(useSaturationButton.get_active());
         break;
     }
     callback();
+}
+
+void ColorMapperSelection::UpdateOptions() {
+    if (mapperType == ColorMapperType::ClosestWithOffset) {
+        grid.attach(offsetScale, 1, 1, 1, 1);
+        offsetScale.show();
+    } else {
+        grid.remove(offsetScale);
+        offsetScale.hide();
+    }
 }
