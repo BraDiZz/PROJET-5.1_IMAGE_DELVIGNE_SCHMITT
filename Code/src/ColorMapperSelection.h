@@ -3,13 +3,16 @@
 
 #include <memory>
 
+#include <gtkmm/frame.h>
 #include <gtkmm/button.h>
 #include <gtkmm/grid.h>
 #include <gtkmm/scale.h>
 
 using ColorMapperChangedCallback = std::function<void()>;
 
-class ColorMapperSelection : public Gtk::Grid {
+class ColorMapperSelection : public Gtk::Frame {
+    Gtk::Grid grid;
+
     std::shared_ptr<ColorMapper> mapper;
     ColorMapperType mapperType = ColorMapperType::Closest;
 
