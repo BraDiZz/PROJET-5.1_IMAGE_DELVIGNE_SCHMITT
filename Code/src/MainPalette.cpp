@@ -11,6 +11,13 @@ MainPalette::MainPalette() : mainBox(Gtk::ORIENTATION_VERTICAL),
                              imageBox(Gtk::ORIENTATION_HORIZONTAL),
                              saveBox(Gtk::ORIENTATION_HORIZONTAL) {
     set_title("Application Graphique Armonie de Couleur");
+    Glib::RefPtr<Gdk::Pixbuf> icon = Gdk::Pixbuf::create_from_file("Resources/Logo.png");
+    set_icon(icon);
+    icon = icon->scale_simple(40, 40, Gdk::INTERP_BILINEAR);
+    iconImage.set(icon);
+    iconImage.set_margin_end(10);
+    iconImage.set_size_request(20, 20);
+    fileSelectionBox.pack_start(iconImage, Gtk::PACK_SHRINK, 0);
 
     fileSelectionBox.set_margin_top(10);
     fileSelectionBox.set_margin_bottom(5);
@@ -71,7 +78,6 @@ bool MainPalette::PathIsValid(const std::string& filename) {
 }
 
 void MainPalette::LoadImage() {
-    std::cout << "LoadImage" << std::endl;
     Gtk::FileChooserDialog dialog("Veuillez choisir un fichier", Gtk::FILE_CHOOSER_ACTION_OPEN);
     dialog.set_transient_for(*this); // Définir la fenêtre parente
 

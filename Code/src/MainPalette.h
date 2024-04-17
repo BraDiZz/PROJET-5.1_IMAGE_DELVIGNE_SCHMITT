@@ -18,6 +18,7 @@ class MainPalette : public Gtk::Window {
     Gtk::Box saveBox;
 
     // Créer un bouton pour ouvrir le dialogue de sélection de fichier
+    Gtk::Image iconImage;
     Gtk::Button buttonImgIn;
     Gtk::Entry entry;
     std::string image_path;
