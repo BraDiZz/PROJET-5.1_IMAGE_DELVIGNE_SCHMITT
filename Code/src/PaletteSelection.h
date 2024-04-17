@@ -1,3 +1,4 @@
+#pragma once
 #include "ColorScheme.h"
 #include "ColorSelector.h"
 #include "PlusAndMinusButtons.h"

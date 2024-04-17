@@ -1,13 +1,14 @@
 #pragma once
-#include "image_ppm.h"
 #include "Color.h"
+#include "image_ppm.h"
+#include <string>
 
-class ColorImage{
+class ColorImage {
     OCTET* image;
     int width, height;
 
 public:
-    ColorImage(char* filename);
+    ColorImage(const std::string& filename);
     ColorImage(int width, int height);
     ~ColorImage();
 
@@ -23,6 +24,4 @@ public:
 
 private:
     int GetIndexInArray(int x, int y) const;
-
 };
-

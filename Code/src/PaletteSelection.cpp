@@ -7,10 +7,10 @@ PaletteSelection::PaletteSelection(ColorSchemeChangedCallback callback) : plusAn
     pack_start(buttonBox, Gtk::PACK_SHRINK, 0);
     pack_start(colorBox, Gtk::PACK_SHRINK, 0);
 
-    set_margin_start(10);  // Set margin on the start side
-    set_margin_end(10);    // Set margin on the end side
-    set_margin_top(10);    // Set margin on the top side
-    set_margin_bottom(10); // Set margin on the bottom side
+    set_margin_start(10); // Set margin on the start side
+    set_margin_end(10);   // Set margin on the end side
+    set_margin_top(10);   // Set margin on the top side
+    set_margin_bottom(5); // Set margin on the bottom side
 
     InitializeButtons();
     colorSelectors.emplace_back(0, 1);

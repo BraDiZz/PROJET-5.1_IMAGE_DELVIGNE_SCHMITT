@@ -70,7 +70,7 @@ Color ClosestMapperWithOffset::MapColor(Color color) {
 // #                                                                                                          #
 // ############################################################################################################
 
-HistogramMapper::HistogramMapper(std::shared_ptr<ColorScheme> colorScheme, const ColorImage& image) : ColorMapper(colorScheme) {
+void HistogramMapper::SetImage(const ColorImage& image) {
     std::vector<int> hueHistogram = GetHueHistogram(image);
     InitIntervals(hueHistogram);
     for (ColorInterval interval : intervals) {
@@ -104,6 +104,8 @@ std::vector<int> HistogramMapper::GetHueHistogram(const ColorImage& image) const
 }
 
 void HistogramMapper::InitIntervals(const std::vector<int>& hueHistogram) {
+    intervals.clear();
+
     std::vector<int> centroids = GetInitialCentroids(colorScheme->GetNumberOfColors());
     std::vector<int> newCentroids(centroids.size(), 0);
 
