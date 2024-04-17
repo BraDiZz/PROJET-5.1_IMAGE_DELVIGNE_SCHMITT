@@ -14,10 +14,9 @@ ColorMapperSelection::ColorMapperSelection(ColorMapperChangedCallback callback) 
     offsetScale.signal_value_changed().connect(sigc::mem_fun(*this, &ColorMapperSelection::OnScaleChanged));
     attach(offsetScale, 1, 1, 1, 1);
 
-    set_margin_start(10);  // Set margin on the start side
+    set_margin_start(5);  // Set margin on the start side
     set_margin_end(10);    // Set margin on the end side
-    set_margin_top(5);     // Set margin on the top side
-    set_margin_bottom(10); // Set margin on the bottom side
+    set_margin_bottom(5); // Set margin on the bottom side
 
     UpdateColorMapper();
 

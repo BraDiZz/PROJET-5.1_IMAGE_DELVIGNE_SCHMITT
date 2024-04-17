@@ -12,6 +12,16 @@ MainPalette::MainPalette() : mainBox(Gtk::ORIENTATION_VERTICAL),
                              saveBox(Gtk::ORIENTATION_HORIZONTAL) {
     set_title("Application Graphique Armonie de Couleur");
 
+    fileSelectionBox.set_margin_top(10);
+    fileSelectionBox.set_margin_bottom(5);
+    fileSelectionBox.set_margin_start(10);
+    fileSelectionBox.set_margin_end(10);
+
+    saveBox.set_margin_top(10);
+    saveBox.set_margin_bottom(10);
+    saveBox.set_margin_start(10);
+    saveBox.set_margin_end(10);
+
     mainBox.pack_start(fileSelectionBox, Gtk::PACK_SHRINK, 0);
     mainBox.pack_start(paletteSelection, Gtk::PACK_SHRINK, 0);
     mainBox.pack_start(colorMapperSelection, Gtk::PACK_SHRINK, 0);
@@ -34,14 +44,16 @@ MainPalette::MainPalette() : mainBox(Gtk::ORIENTATION_VERTICAL),
 
     fileSelectionBox.pack_start(buttonImgIn, Gtk::PACK_SHRINK, 0);
     buttonImgIn.set_label("Open Image");
-    fileSelectionBox.pack_start(entry, Gtk::PACK_SHRINK, 0);
+    buttonImgIn.set_margin_end(10);
+    fileSelectionBox.pack_start(entry, Gtk::PACK_EXPAND_WIDGET, 0);
 
     imageBox.pack_start(ImageIn, Gtk::PACK_SHRINK, 0);
     imageBox.pack_start(ImageOut, Gtk::PACK_SHRINK, 0);
 
-    saveBox.pack_start(Entry_Image_Out, Gtk::PACK_SHRINK, 0);
     saveBox.pack_start(buttonSave, Gtk::PACK_SHRINK, 0);
+    saveBox.pack_start(Entry_Image_Out, Gtk::PACK_SHRINK, 0);
     buttonSave.set_label("Save Image");
+    buttonSave.set_margin_end(10);
 
     buttonImgIn.signal_clicked().connect([&]() { LoadImage(); });
     buttonSave.signal_clicked().connect([&]() { SaveImage(); });

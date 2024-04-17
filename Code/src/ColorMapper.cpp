@@ -155,7 +155,7 @@ std::vector<int> HistogramMapper::GetNewCentroids(const std::vector<int>& hueHis
         if (count != 0) {
             newCentroids[i] = sum / count;
         } else {
-            newCentroids[i] = std::rand() % 255; // or some other value that makes sense in your context
+            newCentroids[i] = std::rand() % 255; // If the cluster is empty, assign a random value
         }
     }
     return newCentroids;
