@@ -14,9 +14,10 @@ enum struct ColorSchemeType {
 };
 
 struct ColorSchemeColor {
-    double hue;
+    double hue = 0;
     double saturation = 1;
 
+    ColorSchemeColor() = default;
     ColorSchemeColor(double hueIn, double saturationIn = 1) : hue(fmod(hueIn, 360)), saturation(std::clamp(saturationIn, 0.0, 1.0)) {}
 };
 
@@ -37,12 +38,12 @@ public:
 
 struct MonochromeColorScheme : public ColorScheme {
 public:
-    MonochromeColorScheme(double hue) : ColorScheme({hue}) {}
+    MonochromeColorScheme(double hue) : ColorScheme({ColorSchemeColor(hue)}) {}
 };
 
 struct ComplementaryColorScheme : public ColorScheme {
 public:
-    ComplementaryColorScheme(double hue) : ColorScheme({hue, hue + 180}) {}
+    ComplementaryColorScheme(double hue) : ColorScheme({ColorSchemeColor(hue), ColorSchemeColor(hue + 180)}) {}
 
     void SetColor(int index, double hue, double saturation) override {
         if (index == 0) {
@@ -53,18 +54,19 @@ public:
 };
 
 struct AnalogousColorScheme : public ColorScheme {
+    double colorDistance;
+
 public:
-    AnalogousColorScheme(double hue, double colorDistance, unsigned int numberOfHues) : ColorScheme({hue}) {
-        for (unsigned int i = 1; i < (numberOfHues - 1) / 2; i++) {
-            this->colors.emplace_back(hue + i * colorDistance);
-            this->colors.emplace_back(hue - i * colorDistance);
+    AnalogousColorScheme(double hue, double colorDistance, unsigned int numberOfHues) : ColorScheme({hue}), colorDistance(colorDistance) {
+        for (unsigned int i = 1; i < numberOfHues; i++) {
+            colors.emplace_back(hue + i * colorDistance);
         }
     }
 
     void SetColor(int index, double hue, double saturation) override {
         if (index == 0) {
             for (unsigned int i = 1; i < colors.size(); i++) {
-                colors[i].hue = fmod(hue + (i % 2 == 0 ? i / 2 : -i / 2) * 30, 360);
+                colors[i].hue = fmod(hue + colorDistance * i, 360);
             }
         }
         ColorScheme::SetColor(index, hue, saturation);

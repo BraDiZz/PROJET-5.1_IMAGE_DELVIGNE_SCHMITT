@@ -9,8 +9,7 @@
 // #                                                                                                          #
 // ############################################################################################################
 
-void ColorMapper::ConvertToColorScheme(ColorImage &image) {
-    std::cout << "Converting to color scheme" << std::endl;
+void ColorMapper::ConvertToColorScheme(ColorImage& image) {
     for (int x = 0; x < image.GetWidth(); x++) {
         for (int y = 0; y < image.GetHeight(); y++) {
             Color pixel = image.GetPixel(x, y);
@@ -28,26 +27,26 @@ void ColorMapper::ConvertToColorScheme(ColorImage &image) {
 
 Color ClosestMapper::MapColor(Color color) {
     auto originalHSLColor = color.GetHSL();
-    double closestHue = GetClosestHue(originalHSLColor[0]);
+    auto closest = GetClosestColor(originalHSLColor[0]);
 
     Color closestColor;
-    closestColor.SetHSL(closestHue, originalHSLColor[1], originalHSLColor[2]);
+    closestColor.SetHSL(closest.hue, originalHSLColor[1], originalHSLColor[2]);
     return closestColor;
 }
 
-double ClosestMapper::GetClosestHue(double hue) const {
+ColorSchemeColor ClosestMapper::GetClosestColor(double hue) const {
     hue = fmod(hue, 360);
 
     double minDistance = 360;
-    double closestHue;
-    for (ColorSchemeColor color : colorScheme->GetColors()) {
+    ColorSchemeColor closestColor;
+    for (const auto& color : colorScheme->GetColors()) {
         double distance = std::min(std::abs(color.hue - hue), 360 - std::abs(color.hue - hue));
         if (distance < minDistance) {
             minDistance = distance;
-            closestHue = color.hue;
+            closestColor = color;
         }
     }
-    return closestHue;
+    return closestColor;
 }
 
 // ############################################################################################################
@@ -58,7 +57,7 @@ double ClosestMapper::GetClosestHue(double hue) const {
 
 Color ClosestMapperWithOffset::MapColor(Color color) {
     auto originalHSLColor = color.GetHSL();
-    double closestHue = GetClosestHue(originalHSLColor[0] + offset);
+    double closestHue = GetClosestColor(originalHSLColor[0] + offset).hue;
 
     Color closestColor;
     closestColor.SetHSL(closestHue, originalHSLColor[1], originalHSLColor[2]);
@@ -71,7 +70,7 @@ Color ClosestMapperWithOffset::MapColor(Color color) {
 // #                                                                                                          #
 // ############################################################################################################
 
-HistogramMapper::HistogramMapper(std::shared_ptr<ColorScheme> colorScheme, const ColorImage &image) : ColorMapper(colorScheme) {
+void HistogramMapper::SetImage(const ColorImage& image) {
     std::vector<int> hueHistogram = GetHueHistogram(image);
     InitIntervals(hueHistogram);
     for (ColorInterval interval : intervals) {
@@ -91,7 +90,7 @@ Color HistogramMapper::MapColor(Color color) {
     return color;
 }
 
-std::vector<int> HistogramMapper::GetHueHistogram(const ColorImage &image) const {
+std::vector<int> HistogramMapper::GetHueHistogram(const ColorImage& image) const {
     std::vector<int> hueHistogram(360, 0);
     for (int x = 0; x < image.GetWidth(); x++) {
         for (int y = 0; y < image.GetHeight(); y++) {
@@ -104,15 +103,21 @@ std::vector<int> HistogramMapper::GetHueHistogram(const ColorImage &image) const
     return hueHistogram;
 }
 
-void HistogramMapper::InitIntervals(const std::vector<int> &hueHistogram) {
+void HistogramMapper::InitIntervals(const std::vector<int>& hueHistogram) {
+    intervals.clear();
+
     std::vector<int> centroids = GetInitialCentroids(colorScheme->GetNumberOfColors());
     std::vector<int> newCentroids(centroids.size(), 0);
 
     int iterations = 0;
-    while (centroids != newCentroids) {
+    while (centroids != newCentroids && iterations < 100) {
+        std::cout << "Iteration " << iterations << std::endl;
         iterations++;
         centroids = newCentroids;
         newCentroids = GetNewCentroids(hueHistogram, centroids);
+        for (size_t i = 0; i < centroids.size(); i++) {
+            std::cout << centroids[i] << " ";
+        }
     }
     std::cout << "Converged after " << iterations << " iterations" << std::endl;
     for (size_t i = 0; i < centroids.size(); i++) {
@@ -134,7 +139,7 @@ std::vector<int> HistogramMapper::GetInitialCentroids(int k) const {
     return centroids;
 }
 
-std::vector<int> HistogramMapper::GetNewCentroids(const std::vector<int> &hueHistogram, const std::vector<int> &centroids) const {
+std::vector<int> HistogramMapper::GetNewCentroids(const std::vector<int>& hueHistogram, const std::vector<int>& centroids) const {
     std::vector<int> newCentroids(centroids.size(), 0);
     for (size_t i = 0; i < centroids.size(); i++) {
         int leftBorderOfCluster = GetLeftClusterBorder(centroids, i);
@@ -147,12 +152,16 @@ std::vector<int> HistogramMapper::GetNewCentroids(const std::vector<int> &hueHis
         }
         sum += hueHistogram[rightBorderOfCluster] * rightBorderOfCluster;
         count += hueHistogram[rightBorderOfCluster];
-        newCentroids[i] = sum / count;
+        if (count != 0) {
+            newCentroids[i] = sum / count;
+        } else {
+            newCentroids[i] = std::rand() % 255; // or some other value that makes sense in your context
+        }
     }
     return newCentroids;
 }
 
-int HistogramMapper::GetLeftClusterBorder(const std::vector<int> &centroids, size_t centroidIndex) const {
+int HistogramMapper::GetLeftClusterBorder(const std::vector<int>& centroids, size_t centroidIndex) const {
     if (centroidIndex != 0) {
         return std::ceil((centroids[centroidIndex - 1] + centroids[centroidIndex]) / 2);
     } else {
@@ -160,7 +169,7 @@ int HistogramMapper::GetLeftClusterBorder(const std::vector<int> &centroids, siz
     }
 }
 
-int HistogramMapper::GetRightClusterBorder(const std::vector<int> &centroids, size_t centroidIndex) const {
+int HistogramMapper::GetRightClusterBorder(const std::vector<int>& centroids, size_t centroidIndex) const {
     if (centroidIndex != centroids.size() - 1) {
         return std::floor((centroids[centroidIndex] + centroids[centroidIndex + 1]) / 2);
     } else {
